@@ -1,0 +1,50 @@
+[
+  {
+    "name": "Cơm Tấm",
+    "label": "Com_Tam",
+    "coordinates": {
+      "type": "Point",
+      "coordinates": [106.69609668620878, 10.792616316515204]
+    },
+    "lstImgs": [
+      "https://i.ytimg.com/vi/cJu6tFJe_Gc/maxresdefault.jpg",
+      "https://comtamthuankieu.com.vn/wp-content/uploads/2020/12/IMG_0081-sca…",
+      "https://seabreezevictoria.com/wp-content/uploads/2024/01/com-tam-suon-…"
+    ],
+    "address": "236 Dinh Tien Hoang Street, Da Kao Ward, District 1",
+    "description": "Broken Rice (Com tam) is a popular dish in Saigon, Southern Vietnam.",
+    "rangePrice": [40000, 100000]
+  },
+  {
+    "name": "Phở Bò",
+    "label": "Pho_Bo",
+    "coordinates": {
+      "type": "Point",
+      "coordinates": [105.848172, 21.028511]
+    },
+    "lstImgs": [
+      "https://example.com/pho1.jpg",
+      "https://example.com/pho2.jpg",
+      "https://example.com/pho3.jpg"
+    ],
+    "address": "10 Ly Quoc Su Street, Hoan Kiem District, Hanoi",
+    "description": "Pho Bo is a traditional Vietnamese noodle soup consisting of broth, rice noodles, herbs, and beef.",
+    "rangePrice": [30000, 70000]
+  },
+  {
+    "name": "Bánh Mì",
+    "label": "Banh_Mi",
+    "coordinates": {
+      "type": "Point",
+      "coordinates": [106.690000, 10.776889]
+    },
+    "lstImgs": [
+      "https://example.com/banhmi1.jpg",
+      "https://example.com/banhmi2.jpg",
+      "https://example.com/banhmi3.jpg"
+    ],
+    "address": "37 Nguyen Trai Street, District 1, Ho Chi Minh City",
+    "description": "Banh Mi is a Vietnamese sandwich that consists of a French baguette filled with various ingredients such as meats, vegetables, and condiments.",
+    "rangePrice": [15000, 40000]
+  }
+]

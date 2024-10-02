@@ -10,6 +10,9 @@ const adminService = {
     deleteFood: async (id) => {
         return await axios.delete(`/crud/delete-food?id=${id}`);
     },
+    createFoodFromFile: async (data) => {
+        return await axios.post('/crud/add-more-food', data);
+    }
 }
 
 export default adminService;

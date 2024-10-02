@@ -122,7 +122,7 @@ export default function Foods() {
 
     return (
         <div className='food-container'>
-            <DialogFile open={openSelectFile} handleCloseSelectFile={handleCloseSelectFile} handleClickOpenSelectFile={handleClickOpenSelectFile} VisuallyHiddenInput={VisuallyHiddenInput} />
+            <DialogFile open={openSelectFile} handleCloseSelectFile={handleCloseSelectFile} handleClickOpenSelectFile={handleClickOpenSelectFile} VisuallyHiddenInput={VisuallyHiddenInput} reloadData={reloadData} />
             <DialogAction open={openConfirm} handleCloseConfirm={handleCloseConfirm} handleClickOpenConfirm={handleClickOpenConfirm} foodId={foodId} reloadData={reloadData} />
             <Dialog open={open} handleClose={handleClose} handleClickOpen={handleClickOpen} reloadData={reloadData} />
             <div className="header">

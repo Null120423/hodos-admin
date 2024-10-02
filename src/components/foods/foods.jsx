@@ -1,76 +1,166 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import UploadIcon from '@mui/icons-material/Upload';
 import DescriptionIcon from '@mui/icons-material/Description';
 import AddIcon from '@mui/icons-material/Add';
 import './foods.scss';
 import Table from '../table/table';
-const columns = [
-    { field: 'id', headerName: 'ID', width: 70 },
-    { field: 'name', headerName: 'Name', width: 130 },
-    { field: 'lstImgs', headerName: 'Image', width: 130 },
-    { field: 'rangePrice', headerName: 'Price', width: 80 },
-    { field: 'address', headerName: 'Adress', width: 90 },
-    { field: 'description', headerName: 'Description', width: 130 },
-];
-const rows = [
-    {
-        id: 1,
-        name: 'Spaghetti Carbonara',
-        lstImgs: 'carbonara.jpg',
-        rangePrice: '500000',
-        address: '123 Pasta St.',
-        description: 'Classic Italian pasta with creamy sauce and pancetta.'
-    },
-    {
-        id: 2,
-        name: 'Margherita Pizza',
-        lstImgs: 'margherita.jpg',
-        rangePrice: '300000',
-        address: '456 Pizza Ave.',
-        description: 'Traditional pizza with fresh tomatoes, mozzarella, and basil.'
-    },
-    {
-        id: 3,
-        name: 'Caesar Salad',
-        lstImgs: 'caesar.jpg',
-        rangePrice: '1000000',
-        address: '789 Salad Blvd.',
-        description: 'Crisp romaine lettuce with Caesar dressing, croutons, and parmesan.'
-    },
-    {
-        id: 4,
-        name: 'Beef Tacos',
-        lstImgs: 'tacos.jpg',
-        rangePrice: '900000',
-        address: '101 Taco Lane',
-        description: 'Soft corn tortillas filled with seasoned beef, lettuce, and cheese.'
-    },
-];
+import Dialog from '../dialog/dialogAddFood';
+import DialogAction from '../dialog/dialogConfirmAction';
+import DialogFile from '../dialog/dialogSelectFile';
+import adminService from '../../service/adminService';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import IconButton from '@mui/material/IconButton';
+import { styled } from '@mui/material/styles';
+import Button from '@mui/material/Button';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+
+const ActionButtons = ({ onEdit, onDelete }) => {
+    return (
+        <div>
+            <IconButton onClick={onDelete}><DeleteIcon style={{ color: '#FF3334' }} /></IconButton>
+            <IconButton onClick={onEdit}><EditIcon style={{ color: '#F7C836' }} /></IconButton>
+        </div>
+    );
+};
 
 const paginationModel = { page: 0, pageSize: 5 };
-
+const VisuallyHiddenInput = styled('input')({
+    clip: 'rect(0 0 0 0)',
+    clipPath: 'inset(50%)',
+    height: 1,
+    overflow: 'hidden',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    whiteSpace: 'nowrap',
+    width: 1,
+});
 export default function Foods() {
+    const [open, setOpen] = React.useState(false);
+    const [openConfirm, setOpenConfirm] = React.useState(false);
+    const [openSelectFile, setOpenSelectFile] = React.useState(false);
+    const [foodDataTable, setFoodDataTable] = React.useState([]);
+    const [foodId, setFoodId] = React.useState('');
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    }
+
+    const handleClose = () => {
+        setOpen(false);
+    }
+
+    const handleClickOpenConfirm = (id) => {
+        setFoodId(id);
+        setOpenConfirm(true);
+    }
+
+    const handleCloseConfirm = () => {
+        setOpenConfirm(false);
+    }
+
+    const handleClickOpenSelectFile = () => {
+        setOpenSelectFile(true);
+    }
+
+    const handleCloseSelectFile = () => {
+        setOpenSelectFile(false);
+    }
+
+    const columns = [
+        { field: 'id', headerName: 'ID', width: 70 },
+        { field: 'name', headerName: 'Name', width: 170 },
+        { field: 'lstImgs', headerName: 'Image', flex: 1 },
+        { field: 'rangePrice', headerName: 'Price', typeof: Number, width: 80 },
+        { field: 'address', headerName: 'Address', flex: 2 },
+        { field: 'description', headerName: 'Description', flex: 3 },
+        {
+            field: 'action', headerName: 'Action', width: 150, renderCell: (params) => (
+                <ActionButtons
+                    onEdit={() => console.log('edit')}
+                    onDelete={() => handleClickOpenConfirm(params.row.id)}
+                />
+            )
+        },
+    ];
+
+    const getAllFoods = async () => {
+        try {
+            let response = await adminService.getAllFood('all');
+            if (response && response.errCode === 0) {
+                processFoodData(response.data);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const processFoodData = (data) => {
+        let result = data.map((item, key) => {
+            return (
+                {
+                    id: item._id,
+                    name: item.name,
+                    lstImgs: item.lstImgs,
+                    rangePrice: item.rangePrice,
+                    address: item.address,
+                    description: item.description,
+                }
+            )
+        })
+        setFoodDataTable(result);
+    }
+
+    const reloadData = async () => {
+        getAllFoods();
+    }
+
+    useEffect(() => {
+        getAllFoods();
+    }, []);
+
     return (
         <div className='food-container'>
+            <DialogFile open={openSelectFile} handleCloseSelectFile={handleCloseSelectFile} handleClickOpenSelectFile={handleClickOpenSelectFile} VisuallyHiddenInput={VisuallyHiddenInput} />
+            <DialogAction open={openConfirm} handleCloseConfirm={handleCloseConfirm} handleClickOpenConfirm={handleClickOpenConfirm} foodId={foodId} reloadData={reloadData} />
+            <Dialog open={open} handleClose={handleClose} handleClickOpen={handleClickOpen} reloadData={reloadData} />
             <div className="header">
                 <h1>Food</h1>
                 <div className="action-list">
-                    <div className="upload">
-                        <span>Upload</span>
-                        <DescriptionIcon />
-                    </div>
-                    <div className="export">
-                        <span>Export</span>
-                        <UploadIcon />
-                    </div>
-                    <div className="create">
-                        <span>Create</span>
+                    <Button
+                        component="label"
+                        role={undefined}
+                        variant="contained"
+                        tabIndex={-1}
+                        startIcon={<CloudUploadIcon />}
+                        style={{ backgroundColor: '#fff', color: '#000' }}
+                        onClick={() => handleClickOpenSelectFile()}
+                    >
+                        Upload
+                    </Button>
+                    <Button
+                        component="label"
+                        role={undefined}
+                        variant="contained"
+                        tabIndex={-1}
+                        startIcon={<DescriptionIcon />}
+                        style={{ backgroundColor: '#fff', color: '#000' }}
+                    >
+                        Export
+                        <VisuallyHiddenInput
+                            type="file"
+                            onChange={(event) => console.log(event.target.files)}
+                        />
+                    </Button>
+                    <div className="create" onClick={() => handleClickOpen()}>
                         <AddIcon />
+                        <span>Create</span>
                     </div>
                 </div>
             </div>
             <div className="content">
-                <Table rows={rows} columns={columns} paginationModel={paginationModel} />
+                <Table rows={foodDataTable} columns={columns} paginationModel={paginationModel} />
             </div>
 
         </div>

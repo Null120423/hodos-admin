@@ -27,10 +27,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 50px;
+            gap: 20px;
 
-            .upload,
-            .export,
             .create {
                 display: flex;
                 justify-content: space-between;
@@ -39,8 +37,6 @@
                 font-weight: 500;
             }
 
-            .upload,
-            .export,
             .create {
                 background-color: var(--white-color);
                 padding: 15px;

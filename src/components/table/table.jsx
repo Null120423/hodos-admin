@@ -4,7 +4,7 @@ import Paper from '@mui/material/Paper';
 export default function table({ rows, columns, paginationModel }) {
     return (
         <div>
-            <Paper sx={{ height: 400, width: '100%' }}>
+            <Paper sx={{ height: 450, width: '100%' }}>
                 <DataGrid
                     rows={rows}
                     columns={columns}
@@ -12,6 +12,7 @@ export default function table({ rows, columns, paginationModel }) {
                     pageSizeOptions={[5, 10]}
                     checkboxSelection
                     sx={{ border: 0 }}
+                    disableColumnResize={true}
                 />
             </Paper>
         </div>

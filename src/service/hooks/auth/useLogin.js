@@ -1,6 +1,6 @@
-import { useMutation } from "@tanstack/react-query";
-import { endpoints } from "../../endpoints";
-import rootApi from "../../rootApi";
+import { useMutation } from '@tanstack/react-query';
+import { endpoints } from '../../endpoints';
+import rootApi from '../../rootApi';
 
 const useLogin = () => {
   const { isPending, isError, data, error, mutateAsync } = useMutation({
@@ -8,7 +8,7 @@ const useLogin = () => {
       return rootApi.post(endpoints.LOGIN, variables);
     },
     onError: (e) => {
-      alert(e?.response?.data?.message || "Đã có lỗi xảy ra");
+      alert(e?.response?.data?.message || 'Đã có lỗi xảy ra');
     },
     onSuccess: async (data) => {
       alert(JSON.stringify(data));

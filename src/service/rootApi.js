@@ -1,5 +1,8 @@
-import initApi from "./initApi";
+import initApi from './initApi';
 
-const rootApi = initApi(process.env.REACT_APP_BACKEND_URL);
+// const rootApi = initApi(import.meta.env.REACT_APP_BACKEND_URL);
+const rootApi = initApi('https://travel-app-api.genny.id.vn');
+
+//travel-app-api.genny.id.vn
 
 export default rootApi;

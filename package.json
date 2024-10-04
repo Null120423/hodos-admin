@@ -29,7 +29,8 @@
     "react-router-dom": "^6.26.2",
     "react-toastify": "^10.0.5",
     "rsuite": "^5.71.0",
-    "sass": "^1.79.4"
+    "sass": "^1.79.4",
+    "@faker-js/faker": "^8.0.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.11.1",

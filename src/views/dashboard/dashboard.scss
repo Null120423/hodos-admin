@@ -1,32 +1,15 @@
-:root {
-    --blue-color-primary: #79BEE6;
-    --blue-color-bold: #007BBF;
-    --blue-color-extra-bold: #2B3FF8;
-    --blue-color-light: #8ED8FF;
-    --blue-backgroud: #E3EAFC;
-    --blue-color-extra-light: #DFF2FF;
-    --green-color-bold: #DCF4FF;
-    --green-color-light: #35F287;
-    --red-color-bold: #FF3334;
-    --yellow-color-bold: #F7C836;
-    --white-color: #FFFFFF;
-    --black-color: #000000;
-    --peach-color: #F98066;
-    --gray-color: #4f4f4f;
-}
-
 .home-container {
     .title {
         margin-bottom: 35px;
     }
     .content {
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
         align-items: start;
         gap: 10px;
 
         .home-main {
-            width: 70%;
+            width: 90%;
             .welcome {
                 width: 100%;
                 position: relative;

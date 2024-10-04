@@ -1,13 +1,11 @@
 ;
 import ImageGif from '../../assets/welcome_animated.gif';
-import DateCalendar from '../date/date';
-import Food from '../food/food';
-import Location from '../location/location';
-import './home.scss';
-function Topbar() {
+import Food from '../../components/food/food';
+import Location from '../../components/location/location';
+import './dashboard.scss';
+function DashBoard() {
     return (
-        <>
-            <div className='home-container'>
+            <div className='home-container '>
                 <div className="title">
                     <h1>Dashboard</h1>
                 </div>
@@ -23,14 +21,9 @@ function Topbar() {
                         <Food />
                         <Location />
                     </div>
-                    <div className="home-right">
-                        <DateCalendar />
-                        <lineUpChecking />
-                    </div>
                 </div>
             </div>
-        </>
     )
 }
 
-export default Topbar
+export default DashBoard

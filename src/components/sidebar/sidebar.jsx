@@ -13,13 +13,9 @@ function Sidebar() {
         navigate(path);
     }
     return (
-        <div className=" bg-red-500 ">
-            <div className="header-sidebar">
-                <div className="cirlce"></div>
-                <h2>Admin Hodos.</h2>
-            </div>
-           <div style={{ width: 240 }}>
-    <Sidenav defaultOpenKeys={['3', '4']}>
+    <>
+    <div className='w-[15rem] h-full'></div>
+    <Sidenav defaultOpenKeys={['3', '4']} className='bg-blue-400/10 w-[15rem] h-screen fixed left-0 top-20'>
       <Sidenav.Body>
         <Nav activeKey="1">
           <Nav.Item eventKey="1" icon={<DashboardIcon />}>
@@ -46,8 +42,7 @@ function Sidebar() {
         </Nav>
       </Sidenav.Body>
     </Sidenav>
-  </div>
-        </div>
+    </>
     );
 }
 

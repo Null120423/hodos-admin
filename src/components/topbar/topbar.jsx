@@ -4,7 +4,7 @@ import { Nav, Navbar } from 'rsuite';
 
 const CustomNavbar = ({ onSelect, activeKey, ...props }) => {
   return (
-    <Navbar {...props}>
+    <Navbar {...props} className='p-4'>
       <Navbar.Brand href="#">RSUITE</Navbar.Brand>
       <Nav onSelect={onSelect} activeKey={activeKey}>
         <Nav.Item eventKey="1">Home</Nav.Item>
@@ -28,12 +28,10 @@ const TopBar = () => {
 
   return (
     <>
-      <CustomNavbar activeKey={activeKey} onSelect={setActiveKey} />
-      <hr />
-      <CustomNavbar appearance="inverse" activeKey={activeKey} onSelect={setActiveKey} />
-      <hr />
-      <CustomNavbar appearance="subtle" activeKey={activeKey} onSelect={setActiveKey} />
-    </>
+    <div className='h-20'></div>
+     <div className='fixed left-0 right-0 top-0 z-50'>
+       <CustomNavbar activeKey={activeKey} onSelect={setActiveKey} />
+     </div></>
   );
 };
 

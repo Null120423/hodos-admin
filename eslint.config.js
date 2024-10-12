@@ -31,6 +31,8 @@ export default [
       'react/jsx-no-target-blank': 'off',
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
       'react/prop-types': 'off',
+      'react/display-name': 'off',
+      'react-hooks/exhaustive-deps': 'off',
     },
   },
 ];

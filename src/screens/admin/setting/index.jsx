@@ -1,10 +1,5 @@
-import MainLayout from "../../../layouts/layout";
 
 const SettingScreen = () => {
-    return (
-        <MainLayout>
-            SettingScreen from 
-        </MainLayout>
-    );
-}
+  return <>SettingScreen from</>;
+};
 export default SettingScreen;

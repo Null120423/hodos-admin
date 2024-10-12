@@ -1,60 +1,52 @@
-import DashboardIcon from '@rsuite/icons/legacy/Dashboard';
-import GearCircleIcon from '@rsuite/icons/legacy/GearCircle';
-import GroupIcon from '@rsuite/icons/legacy/Group';
-import React, { useEffect } from 'react';
-import { redirect } from 'react-router-dom';
+import GearIcon from '@rsuite/icons/Gear';
+import GridIcon from '@rsuite/icons/Grid';
+import LocationIcon from '@rsuite/icons/Location';
+import PageIcon from '@rsuite/icons/Page';
+import React, { Fragment, useEffect } from 'react';
 import { Nav, Sidenav } from 'rsuite';
+import { useSidebar } from '../../contexts/sidebar.context';
 import { ADMIN_ROUTES } from '../../routes/endpoint';
 import { usePathname } from '../../routes/hooks/use-pathname';
 import { useRouter } from '../../routes/hooks/use-router';
-
+export const SIDEBAR_WIDTH = '20rem';
 const SidebarItem = [
   {
     name: 'Dashboard',
-    icon: <DashboardIcon />,
-    key: ADMIN_ROUTES.DASHBOARD
+    icon: <GridIcon />,
+    key: ADMIN_ROUTES.DASHBOARD,
   },
   {
     name: 'Foods',
-    icon: <GroupIcon />,
-    key: ADMIN_ROUTES.FOOD_MANAGER
+    icon: <PageIcon />,
+    key: ADMIN_ROUTES.FOOD_MANAGER,
   },
   {
     name: 'Locations',
-    icon: <GroupIcon />,
-    key: ADMIN_ROUTES.LOCATION_MANAGER
+    icon: <LocationIcon />,
+    key: ADMIN_ROUTES.LOCATION_MANAGER,
   },
   {
     name: 'Settings',
-    icon: <GearCircleIcon />,
+    icon: <GearIcon />,
     key: ADMIN_ROUTES.SETTING,
     subMenu: [
       {
-        name: 'Application',
-        key: ADMIN_ROUTES.SETTING + '/application'
+        name: 'Overview',
+        key: ADMIN_ROUTES.SETTING,
       },
       {
-        name: 'Channel',
-        key: ADMIN_ROUTES.SETTING + '/channel'
+        name: 'Access control',
+        key: ADMIN_ROUTES.SETTING + '/access-control',
       },
-      {
-        name: 'Version',
-        key: ADMIN_ROUTES.SETTING + '/version'
-      },
-      {
-        name: 'Custom Action',
-        key: ADMIN_ROUTES.SETTING + '/custom-action',
-      }
-    ]
-  }
+    ],
+  },
 ];
 
 function Sidebar() {
-  const [expanded, setExpanded] = React.useState(true);
+  const { expanded, setExpanded } = useSidebar();
   const [activeKey, setActiveKey] = React.useState('1');
-  const router = useRouter()
+  const router = useRouter();
   const pathname = usePathname();
-
 
   useEffect(() => {
     switch (pathname) {
@@ -67,61 +59,71 @@ function Sidebar() {
       case ADMIN_ROUTES.LOCATION_MANAGER:
         setActiveKey(ADMIN_ROUTES.LOCATION_MANAGER);
         break;
-      case ADMIN_ROUTES.SETTING + '/application':
-        setActiveKey(ADMIN_ROUTES.SETTING + '/application');
+      case ADMIN_ROUTES.SETTING:
+        setActiveKey(ADMIN_ROUTES.SETTING);
         break;
-      case ADMIN_ROUTES.SETTING + '/channel':
-        setActiveKey(ADMIN_ROUTES.SETTING + '/channel');
-        break;
-      case ADMIN_ROUTES.SETTING + '/version':
-        setActiveKey(ADMIN_ROUTES.SETTING + '/version');
-        break;
-      case ADMIN_ROUTES.SETTING + '/custom-action':
-        setActiveKey(ADMIN_ROUTES.SETTING + '/custom-action');
+      case ADMIN_ROUTES.SETTING + '/access-control':
+        setActiveKey(ADMIN_ROUTES.SETTING + '/access-control');
         break;
       default:
         setActiveKey(ADMIN_ROUTES.DASHBOARD);
-        break
+        break;
     }
-  }, [pathname])
+  }, [pathname]);
 
-
-  const renderNavItems = (items) => {
-    return items.map(item => {
+  const renderNavItems = (items, isJustActiveText = false) => {
+    return items.map((item) => {
       if (item.subMenu) {
         return (
           <Nav.Menu
             onClick={() => {
-              redirect
-              router.push(item.key)
+              router.push(item.key);
             }}
             key={item.key}
             eventKey={item.key}
             title={item.name}
             icon={item.icon}
           >
-            {renderNavItems(item.subMenu)}
+            {activeKey === item.key && (
+              <div className='absolute left-0 top-0 h-12 w-[5px] rounded-r-md bg-blue-500'></div>
+            )}
+            {renderNavItems(item.subMenu, true)}
           </Nav.Menu>
         );
       }
       return (
-        <Nav.Item onClick={() => {
-          router.push(item.key)
-        }} key={item.key} eventKey={item.key} icon={item.icon}>
-          {item.name}
-        </Nav.Item>
+        <Fragment key={item.key}>
+          <Nav.Item
+            className='w-full relative'
+            onClick={(e) => {
+              e.stopPropagation();
+              router.push(item.key);
+            }}
+            eventKey={item.key}
+            icon={item.icon}
+          >
+            {activeKey === item.key && !isJustActiveText && (
+              <div className='absolute left-0 top-0 h-full w-[5px] rounded-r-md bg-blue-500'></div>
+            )}
+            {item.name}
+          </Nav.Item>
+        </Fragment>
       );
     });
   };
 
   return (
-    <Sidenav expanded={expanded} className='h-screen'>
+    <Sidenav
+      expanded={expanded}
+      className={`${expanded && 'shadow-xl w-[15rem]'} h-screen  `}
+    >
+      <Sidenav.Header className='min-h-20'>
+        {expanded && <div className='p-4 text-center font-bold text-2xl text-pretty'>DashBoard</div>}
+      </Sidenav.Header>
       <Sidenav.Body>
-        <Nav activeKey={activeKey} onSelect={setActiveKey}>
-          {renderNavItems(SidebarItem)}
-        </Nav>
+        <Nav activeKey={activeKey}>{renderNavItems(SidebarItem)}</Nav>
       </Sidenav.Body>
-      <Sidenav.Toggle onToggle={expanded => setExpanded(expanded)} />
+      <Sidenav.Toggle onToggle={() => setExpanded(!expanded)} />
     </Sidenav>
   );
 }

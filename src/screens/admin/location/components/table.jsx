@@ -47,7 +47,7 @@ const loaderContainerStyle = {
   padding: 20,
   zIndex: 1,
 };
-const LocationTable = ({ isLoading, data }) => {
+const LocationTable = ({ isLoading, data , take = 5}) => {
   const [checkedKeys, setCheckedKeys] = React.useState([]);
   let checked = false;
   let indeterminate = false;
@@ -78,7 +78,7 @@ const LocationTable = ({ isLoading, data }) => {
   };
 
   return (
-    <Table height={600} autoHeight={true} data={data} rowHeight={100} renderLoading={renderLoading} loading={isLoading}>
+    <Table height={100 * take} autoHeight={true} data={data} rowHeight={100} renderLoading={renderLoading} loading={isLoading}>
       <Column align='center'>
         <HeaderCell style={{ padding: 0 }}>
           <div style={{ lineHeight: '40px' }}>

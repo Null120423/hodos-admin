@@ -1,13 +1,17 @@
-FROM node:14
+FROM node:18-alpine
 
 WORKDIR /app
 
-COPY package.json package-lock.json ./
+COPY package.json .
 
-RUN npm install
+RUN yarn
+
+RUN npm i -g serve
 
 COPY . .
 
+RUN npm run build
+
 EXPOSE 80
 
-CMD ["npm", "start"]
+CMD [ "serve", "-s", "dist" ]

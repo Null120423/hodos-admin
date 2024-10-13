@@ -113,10 +113,7 @@ function Sidebar() {
   };
 
   return (
-    <Sidenav
-      expanded={expanded}
-      className={`${expanded && 'shadow-xl w-[15rem]'} h-screen  `}
-    >
+    <Sidenav expanded={expanded} className={`${expanded && 'shadow-xl w-[15rem]'} h-screen  `}>
       <Sidenav.Header className='min-h-20'>
         {expanded && <div className='p-4 text-center font-bold text-2xl text-pretty'>DashBoard</div>}
       </Sidenav.Header>

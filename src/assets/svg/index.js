@@ -5,3 +5,4 @@ export * from './location-dashboard-icon';
 export * from './login-bg';
 export * from './notfound';
 export * from './setting-icon';
+export * from './upload-icon';

@@ -6,8 +6,9 @@ export const endpoints = {
     },
     FOOD: {
       PAGINATION: 'food/pagination',
-      CREATE: 'api/add-food',
-      CREATE_MORE: 'api/add-more-food',
+      CREATE: 'food/create',
+      CREATE_MULTI: 'food/multi-create',
+      REMOVE_SOFT: 'food/soft',
       UPDATE: 'api/update-food',
       DELETE: 'api/delete-food',
       GET_ALL: 'api/get-all-food',
@@ -15,12 +16,13 @@ export const endpoints = {
     },
     LOCATION: {
       PAGINATION: 'location/pagination',
-      CREATE: 'api/add-location',
+      CREATE: 'location/create',
+      CREATE_MULTI: 'location/multi-create',
+      REMOVE_SOFT: 'location/soft',
       UPDATE: 'api/update-location',
       DELETE: 'api/delete-location',
       GET_ALL: 'api/get-all-location',
       GET_BY_ID: 'api/get-location',
-      CREATE_MORE: 'api/add-more-location',
     },
   },
 };

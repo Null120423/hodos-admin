@@ -48,12 +48,12 @@ const LocationScreen = () => {
         />
         <LocationTable take={where.take} isLoading={isLoading} data={data} />
         <PaginationCustom
-          onChangeLimit={(take) =>{
+          onChangeLimit={(take) => {
             setWhere({
               ...where,
               take: take,
-            })
-         }}
+            });
+          }}
           total={total}
           onChangePage={(page) =>
             setWhere({

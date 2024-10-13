@@ -6,14 +6,12 @@ import AuthLayout from '../layouts/auth';
 import DashboardLayout from '../layouts/layout';
 import { ADMIN_ROUTES, AUTH_ROUTES } from './endpoint';
 
-
-
-// #region aut screen  
+// #region aut screen
 export const LoginPage = lazy(() => import('../screens/auth/login/index'));
 
 //#endregion
 
-// #region admin   
+// #region admin
 export const DashboardPage = lazy(() => import('../screens/admin/dashboard/index'));
 export const FoodManagerPage = lazy(() => import('../screens/admin/food/index'));
 export const LocationManagerPage = lazy(() => import('../screens/admin/location/index'));
@@ -34,9 +32,7 @@ const AuthRoutes = [
       </AuthLayout>
     ),
     path: AUTH_ROUTES.LOGIN,
-    children: [
-      { element: <LoginPage />, index: true },
-    ],
+    children: [{ element: <LoginPage />, index: true }],
   },
 ];
 const AdminRoute = [
@@ -70,7 +66,7 @@ function AppRouter() {
     },
     {
       path: '*',
-      element: <Navigate to="/404" replace />,
+      element: <Navigate to='/404' replace />,
     },
   ]);
 

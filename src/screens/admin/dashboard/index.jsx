@@ -37,7 +37,7 @@ function DashboardScreen() {
     ]);
   }, [data]);
   return (
-        <div className='home-container w-full mt-20'>
+    <div className='home-container w-full mt-20'>
       <div className='content'>
         <div className='home-main'>
           <div className='welcome'>

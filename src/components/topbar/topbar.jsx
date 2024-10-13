@@ -30,7 +30,7 @@ const USER_MENU = [
 ];
 
 const PopoverWithLoader = React.forwardRef((props, ref) => {
-  const {logout} = useAuth()
+  const { logout } = useAuth();
   return (
     <Popover ref={ref} {...props}>
       <div className='flex flex-col'>
@@ -39,7 +39,7 @@ const PopoverWithLoader = React.forwardRef((props, ref) => {
             <Fragment key={index}>
               {index === 1 && <div className='mb-2 border-b mt-2 border-black/10'></div>}
               <div
-              onClick={index === USER_MENU.length - 1 ? logout : () => {}}
+                onClick={index === USER_MENU.length - 1 ? logout : () => {}}
                 className={`max-h-[3rem] pl-2  flex rounded-lg cursor-pointer hover:bg-black/10 justify-start items-center gap-2 w-full min-w-[10rem] text-left`}
               >
                 {item.icon}

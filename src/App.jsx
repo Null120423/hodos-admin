@@ -10,11 +10,10 @@ import { AppRouter } from './routes';
 function App() {
   return (
     <BrowserRouter>
-    <Suspense fallback={<LoadingView/>}>
-    <AppRouter/>
-    </Suspense>
+      <Suspense fallback={<LoadingView />}>
+        <AppRouter />
+      </Suspense>
     </BrowserRouter>
-          
   );
 }
 export default App;

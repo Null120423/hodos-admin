@@ -1,7 +1,11 @@
-import MoreIcon from '@rsuite/icons/legacy/More';
-import React from 'react';
-import { Checkbox, IconButton, Placeholder, Table } from 'rsuite';
-
+import TrashIcon from '@rsuite/icons/Trash';
+import { useEffect } from 'react';
+import { IconButton, Placeholder, Table, Tooltip, Whisper } from 'rsuite';
+import ModalConfirm from '../../../../components/modal-confirm';
+import { useLoading } from '../../../../contexts/loading-global';
+import { useModal } from '../../../../contexts/modal.context';
+import useSoftRemoveFood from '../../../../service/hooks/admin/food/useSoftRemove';
+import { DetailItem } from '../../dashboard/components/lst-item';
 const { Column, HeaderCell, Cell } = Table;
 
 const ImageCell = ({ rowData, ...props }) => (
@@ -10,18 +14,25 @@ const ImageCell = ({ rowData, ...props }) => (
   </Cell>
 );
 
-const CheckCell = ({ rowData, onChange, checkedKeys, dataKey, ...props }) => (
-  <Cell {...props} style={{ padding: 0, display: 'flex', justifyItems: 'center', alignItems: 'center' }}>
-    <Checkbox
-      value={rowData[dataKey]}
-      inline
-      onChange={onChange}
-      checked={checkedKeys.some((item) => item === rowData[dataKey])}
-    />
-  </Cell>
-);
-
 const ActionCell = ({ ...props }) => {
+  const { openModal } = useModal();
+  const {startLoading, stopLoading} = useLoading()
+  const {onRemove, isLoading} = useSoftRemoveFood()
+  const handleRemove = (id) => {
+    openModal(<ModalConfirm title={''} subTitle={"Do you confirm remove this record!"} onConfirm={async () => {
+   await  onRemove({
+    id
+   })
+    }}/>, 'Confirm')
+  }
+
+  useEffect(() => {
+    if(isLoading){
+      startLoading()
+    }else {
+      stopLoading()
+    }
+  },[isLoading])
   return (
     <Cell
       {...props}
@@ -33,7 +44,16 @@ const ActionCell = ({ ...props }) => {
       }}
     >
       <div className='flex gap-2 flex-wrap'>
-        <IconButton appearance='subtle' icon={<MoreIcon />} />
+          <Whisper placement="top" trigger="hover" speaker={ <Tooltip>
+   Remove this food
+  </Tooltip>}>
+             <IconButton onClick={(e) => {
+              e.stopPropagation()
+              e.preventDefault()
+              handleRemove(props.rowData.id)
+             }} color='red' appearance='primary' icon={<TrashIcon />} />
+          </Whisper>
+       
       </div>
     </Cell>
   );
@@ -48,26 +68,7 @@ const loaderContainerStyle = {
   zIndex: 1,
 };
 const FoodTable = ({ isLoading, data, take = 5 }) => {
-  const [checkedKeys, setCheckedKeys] = React.useState([]);
-  let checked = false;
-  let indeterminate = false;
-
-  if (checkedKeys.length === data.length) {
-    checked = true;
-  } else if (checkedKeys.length === 0) {
-    checked = false;
-  } else if (checkedKeys.length > 0 && checkedKeys.length < data.length) {
-    indeterminate = true;
-  }
-
-  const handleCheckAll = (value, checked) => {
-    const keys = checked ? data.map((item) => item.id) : [];
-    setCheckedKeys(keys);
-  };
-  const handleCheck = (value, checked) => {
-    const keys = checked ? [...checkedKeys, value] : checkedKeys.filter((item) => item !== value);
-    setCheckedKeys(keys);
-  };
+  const { openModal } = useModal();
 
   const renderLoading = () => {
     return (
@@ -78,15 +79,17 @@ const FoodTable = ({ isLoading, data, take = 5 }) => {
   };
 
   return (
-    <Table height={100 * take} autoHeight={true} data={data} rowHeight={100} renderLoading={renderLoading} loading={isLoading}>
-      <Column align='center'>
-        <HeaderCell style={{ padding: 0 }}>
-          <div style={{ lineHeight: '40px' }}>
-            <Checkbox inline checked={checked} indeterminate={indeterminate} onChange={handleCheckAll} />
-          </div>
-        </HeaderCell>
-        <CheckCell dataKey='id' checkedKeys={checkedKeys} onChange={handleCheck} />
-      </Column>
+    <Table
+      onRowClick={(data) => {
+        openModal(<DetailItem item={data} />, 'Food Detail [' + data?.name + ']');
+      }}
+      height={100 * take}
+      autoHeight={true}
+      data={data}
+      rowHeight={100}
+      renderLoading={renderLoading}
+      loading={isLoading}
+    >
       <Column align='center'>
         <HeaderCell>Thumbnail</HeaderCell>
         <ImageCell dataKey='img' />

@@ -20,27 +20,21 @@ function TextField(props) {
   return (
     <Form.Group controlId={`${name}-3`}>
       <Form.ControlLabel>{label}</Form.ControlLabel>
-      <Form.Control
-        name={name}
-        accepter={accepter}
-        value={value}
-        onChange={handleChange}
-        {...rest}
-      />
+      <Form.Control name={name} accepter={accepter} value={value} onChange={handleChange} {...rest} />
     </Form.Group>
   );
 }
 export default function LoginScreen() {
-  const {login} = useAuth()
+  const { login } = useAuth();
   const { onLogin, isLoading } = useLogin();
   // const {} =
   const handleSubmit = async (checkStatus) => {
     if (checkStatus) {
       await onLogin({
-        ...model.data
-      }).then( res => {
-        login(res.data)
-      })
+        ...model.data,
+      }).then((res) => {
+        login(res.data);
+      });
     }
   };
   return (
@@ -52,12 +46,15 @@ export default function LoginScreen() {
         <h1 className='text-white text-3xl font-bold'>Login</h1>
         <h1 className='h-10 mb-4'>Welcome onboard with us!</h1>
         <TextField className='bg-black/20 min-w-[30rem] border-black/10  text-white' name='username' label='Username' />
-        <TextField className='bg-black/20 min-w-[30rem] border-black/10 text-white' name='password' label='Password' type='password' />
+        <TextField
+          className='bg-black/20 min-w-[30rem] border-black/10 text-white'
+          name='password'
+          label='Password'
+          type='password'
+        />
         <ButtonToolbar>
           <Button className='w-full' appearance='primary' type='submit'>
-            {
-              isLoading && <Loader/>
-            }
+            {isLoading && <Loader />}
             LOGIN
           </Button>
         </ButtonToolbar>

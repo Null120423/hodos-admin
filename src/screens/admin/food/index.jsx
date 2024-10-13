@@ -29,7 +29,7 @@ const FoodScreen = () => {
 
   return (
     <>
-     <Breadcrumb>
+      <Breadcrumb>
         <Breadcrumb.Item href='/'>Dashboard</Breadcrumb.Item>
         <Breadcrumb.Item href='/food-manager' active>
           Food-manager
@@ -48,12 +48,12 @@ const FoodScreen = () => {
         />
         <FoodTable take={where.take} isLoading={isLoading} data={data} />
         <PaginationCustom
-        onChangeLimit={(take) =>{
-          setWhere({
-            ...where,
-            take: take,
-          })
-        }}
+          onChangeLimit={(take) => {
+            setWhere({
+              ...where,
+              take: take,
+            });
+          }}
           total={total}
           onChangePage={(page) =>
             setWhere({
@@ -62,7 +62,8 @@ const FoodScreen = () => {
             })
           }
         />
-      </div></>
+      </div>
+    </>
   );
 };
 export default FoodScreen;

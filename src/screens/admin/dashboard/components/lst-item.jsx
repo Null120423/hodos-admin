@@ -37,9 +37,9 @@ const Item = ({ item, ...props }) => {
   );
 };
 
-const DetailItem = ({ item, ...props }) => {
+export const DetailItem = ({ item, ...props }) => {
   return (
-    <div {...props}>
+    <div {...props} className='max-w-[40rem]'>
       <Carousel autoplay className='custom-slider'>
         {item?.lstImgs?.split(',').map((img, index) => {
           return <img className='rounded-lg shadow-md ' key={index} src={img} height='250' />;
@@ -48,9 +48,6 @@ const DetailItem = ({ item, ...props }) => {
       <div className={`bg-white rounded-3xl p-4`}>
         <h3 className='text-2xl font-bold'>{item?.name}</h3>
         <p>{item?.description}</p>
-        <Button appearance='primary' size='lg' className='w-full mt-2'>
-          Watch detail
-        </Button>
       </div>
     </div>
   );

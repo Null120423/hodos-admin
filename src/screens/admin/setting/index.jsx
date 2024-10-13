@@ -1,4 +1,3 @@
-
 const SettingScreen = () => {
   return <>SettingScreen from</>;
 };

@@ -22,7 +22,7 @@ export const ModalProvider = ({ children }) => {
   return (
     <ModalContext.Provider value={{ openModal, closeModal }}>
       {children}
-      <Modal open={open} onClose={closeModal}>
+      <Modal open={open} onClose={closeModal} className='w-fit'>
         <Modal.Header>
           <Modal.Title>{title || 'title'}</Modal.Title>
         </Modal.Header>

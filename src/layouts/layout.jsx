@@ -5,8 +5,8 @@ import { useAuth } from '../contexts/auth.context';
 import { AUTH_ROUTES } from '../routes/endpoint';
 
 const DashboardLayout = ({ children }) => {
-  const {user} = useAuth()
-    if (!user) {
+  const { user } = useAuth();
+  if (!user) {
     return <Navigate to={AUTH_ROUTES.LOGIN} />;
   }
   return (

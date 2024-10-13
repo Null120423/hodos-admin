@@ -4,7 +4,10 @@ const initApi = (url, headers = {}) => {
   if (url == null) throw new Error('URL is required');
   const api = axios.create({
     baseURL: url,
+    timeout: 100000,
     headers: {
+      'Content-Type': 'application/json',
+      accept: '*/*',
       ...headers,
     },
   });

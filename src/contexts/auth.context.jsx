@@ -8,7 +8,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = useCallback((account) => {
     setUser(account);
-    Cookies.set('user', JSON.stringify(account), { expires: 7 }); // Save user info in cookies for 7 days
+    Cookies.set('user', JSON.stringify(account), { expires: 7 });
   }, []);
 
   const logout = useCallback(() => {

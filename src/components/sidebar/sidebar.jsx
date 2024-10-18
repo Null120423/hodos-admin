@@ -25,6 +25,11 @@ const SidebarItem = [
     icon: <LocationIcon />,
     key: ADMIN_ROUTES.LOCATION_MANAGER,
   },
+   {
+    name: 'Blogs',
+    icon: <LocationIcon />,
+    key: ADMIN_ROUTES.BLOG_MANAGER,
+  },
   {
     name: 'Settings',
     icon: <GearIcon />,

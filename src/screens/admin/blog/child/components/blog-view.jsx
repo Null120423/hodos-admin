@@ -27,7 +27,8 @@ const Item = ({ data }) => {
     const {startLoading,stopLoading} = useLoading()
     const {openModal} = useModal()
     const {onDelete, isLoading} = useForceDelete()
-    const handleConfirmDelete = () => {
+    const handleConfirmDelete = (e) => {
+        e.stopPropagation()
         openModal(<ModalConfirm onConfirm={() => onDelete(data.id)} isLoading={isLoading} />, 'Confirm before remove?')
     }
 

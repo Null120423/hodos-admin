@@ -15,24 +15,31 @@ const ImageCell = ({ rowData, ...props }) => (
 );
 
 const ActionCell = ({ ...props }) => {
-    const { openModal } = useModal();
-  const {startLoading, stopLoading} = useLoading()
-  const {onRemove, isLoading} = useSoftRemoveLocation()
+  const { openModal } = useModal();
+  const { startLoading, stopLoading } = useLoading();
+  const { onRemove, isLoading } = useSoftRemoveLocation();
   const handleRemove = (id) => {
-    openModal(<ModalConfirm title={''} subTitle={"Do you confirm remove this record!"} onConfirm={async () => {
-   await  onRemove({
-    id
-   })
-    }}/>, 'Confirm')
-  }
+    openModal(
+      <ModalConfirm
+        title={''}
+        subTitle={'Do you confirm remove this record!'}
+        onConfirm={async () => {
+          await onRemove({
+            id,
+          });
+        }}
+      />,
+      'Confirm',
+    );
+  };
 
   useEffect(() => {
-    if(isLoading){
-      startLoading()
-    }else {
-      stopLoading()
+    if (isLoading) {
+      startLoading();
+    } else {
+      stopLoading();
     }
-  },[isLoading])
+  }, [isLoading]);
   return (
     <Cell
       {...props}
@@ -43,17 +50,19 @@ const ActionCell = ({ ...props }) => {
         alignItems: 'center',
       }}
     >
-           <div className='flex gap-2 flex-wrap'>
-          <Whisper placement="top" trigger="hover" speaker={ <Tooltip>
-   Remove this food
-  </Tooltip>}>
-             <IconButton onClick={(e) => {
-              e.stopPropagation()
-              e.preventDefault()
-              handleRemove(props.rowData.id)
-             }} color='red' appearance='primary' icon={<TrashIcon />} />
-          </Whisper>
-       
+      <div className='flex gap-2 flex-wrap'>
+        <Whisper placement='top' trigger='hover' speaker={<Tooltip>Remove this food</Tooltip>}>
+          <IconButton
+            onClick={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              handleRemove(props.rowData.id);
+            }}
+            color='red'
+            appearance='primary'
+            icon={<TrashIcon />}
+          />
+        </Whisper>
       </div>
     </Cell>
   );

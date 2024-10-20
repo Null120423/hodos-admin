@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import { Pagination } from 'rsuite';
 
-const limitOptions = [5, 10, 15];
+const limitOptionsDefault = [5, 10, 15];
 
-const PaginationCustom = ({ total, onChangePage, onChangeLimit }) => {
+const PaginationCustom = ({ total, onChangePage, onChangeLimit, limitOptions = limitOptionsDefault }) => {
   const [prev] = React.useState(true);
   const [next] = React.useState(true);
   const [first] = React.useState(true);

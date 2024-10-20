@@ -6,17 +6,16 @@ import LoadingView from './components/loading-view';
 import { useAuth } from './contexts/auth.context';
 import { AppRouter } from './routes';
 
-
 function App() {
-  const {login} = useAuth()
+  const { login } = useAuth();
 
   useEffect(() => {
-    const user = Cookies.get('user')
-    if(user) {
-      login(user)
+    const user = Cookies.get('user');
+    if (user) {
+      login(user);
       // setUser(JSON.parse(user))
     }
-  },[])
+  }, []);
   return (
     <BrowserRouter>
       <Suspense fallback={<LoadingView />}>

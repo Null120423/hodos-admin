@@ -5,9 +5,9 @@ import { useQuill } from 'react-quilljs';
 
 import './style.css';
 
-const Editor = () => {
+const Editor = ({ onChangeValue }) => {
   const { quill, quillRef, Quill } = useQuill({
-    modules: { blotFormatter: {} }
+    modules: { blotFormatter: {} },
   });
 
   if (Quill && !quill) {
@@ -23,6 +23,8 @@ const Editor = () => {
 
         let currrentContents = quill.getContents();
         console.log(currrentContents.diff(oldContents));
+
+        onChangeValue(quill.root.innerHTML);
       });
     }
   }, [quill, Quill]);

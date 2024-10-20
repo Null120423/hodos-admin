@@ -4,6 +4,11 @@ export const endpoints = {
     DASHBOARD: {
       DATA: 'common/dashboard',
     },
+    BLOG: {
+      CREATE: 'blog',
+      FORCE_DELETE: 'blog/force',
+      PAGINATION: 'blog/pagination',
+    },
     FOOD: {
       PAGINATION: 'food/pagination',
       CREATE: 'food/create',

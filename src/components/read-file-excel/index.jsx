@@ -21,8 +21,8 @@ export const readExcelFile = (file) => {
   });
 };
 
-function ReadFileExcelBtn({onResult}) {
-    const file = useRef(null);
+function ReadFileExcelBtn({ onResult }) {
+  const file = useRef(null);
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -33,16 +33,24 @@ function ReadFileExcelBtn({onResult}) {
         console.error('Error reading Excel file:', error);
       }
     }
-     file.current.value = '';
+    file.current.value = '';
   };
-    return <>
-    <input className='hidden' type="file" ref={file} accept=".xlsx, .xls" onChange={handleFileChange} />
-      <Button onClick={() => {
-        if(file) {
+  return (
+    <>
+      <input className='hidden' type='file' ref={file} accept='.xlsx, .xls' onChange={handleFileChange} />
+      <Button
+        onClick={() => {
+          if (file) {
             file.current.value = '';
-        }
-        file?.current?.click()}} startIcon={<UploadIcon />}>Upload by excel</Button>
+          }
+          file?.current?.click();
+        }}
+        startIcon={<UploadIcon />}
+      >
+        Upload by excel
+      </Button>
     </>
+  );
 }
 
 export default ReadFileExcelBtn;

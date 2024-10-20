@@ -11,13 +11,13 @@ import { useToast } from '../../../../contexts/toast.context';
 import useCreateMultiFood from '../../../../service/hooks/admin/food/useCreateMulti';
 import FormCreateFood from './form-create';
 function Filter({ onChange = () => {} }) {
-  const {startLoading, stopLoading} = useLoading()
+  const { startLoading, stopLoading } = useLoading();
   const { openModal } = useModal();
   const inputRef = useRef();
   const { onCreate, isLoading } = useCreateMultiFood();
-  const {showToast} = useToast()
+  const { showToast } = useToast();
 
- const handleUpload = (e) => {
+  const handleUpload = (e) => {
     try {
       const file = e.target.files[0];
       if (!file) return;
@@ -43,13 +43,12 @@ function Filter({ onChange = () => {} }) {
   };
 
   useEffect(() => {
-    if(isLoading) {
-      startLoading()
-    }else {
-      stopLoading()
+    if (isLoading) {
+      startLoading();
+    } else {
+      stopLoading();
     }
-  }, [isLoading])
-
+  }, [isLoading]);
 
   return (
     <div className='w-full flex justify-start items-center p-2 gap-2'>
@@ -68,10 +67,15 @@ function Filter({ onChange = () => {} }) {
         >
           Upload by json
         </Button>
-        <DownloadTemplateBtn keys={['name', 'label','longitude','latitude', 'lstImgs','address', 'description', 'MinPrice', 'MaxPrice']} />
-        <ReadFileExcelBtn onResult={(data) => {
-          console.log(data)
-          onCreate({ foods: data })}} />
+        <DownloadTemplateBtn
+          keys={['name', 'label', 'longitude', 'latitude', 'lstImgs', 'address', 'description', 'MinPrice', 'MaxPrice']}
+        />
+        <ReadFileExcelBtn
+          onResult={(data) => {
+            console.log(data);
+            onCreate({ foods: data });
+          }}
+        />
         <Button
           disabled={isLoading}
           startIcon={<PlusIcon />}

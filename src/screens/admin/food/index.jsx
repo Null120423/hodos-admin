@@ -14,12 +14,19 @@ const FoodScreen = () => {
     skip: 0,
     take: 5,
   });
+  const [name, setName] = React.useState('');
 
   const { data, refetch, total, isLoading } = useFoodPagination(where);
 
-  const [debouncedName] = useDebounce(where.name, 5000);
+  const [debouncedName] = useDebounce(name, 5000);
 
   useEffect(() => {
+    setWhere({
+      ...where,
+      where: {
+        name: name,
+      },
+    });
     refetch();
   }, [refetch, debouncedName]);
 
@@ -38,12 +45,7 @@ const FoodScreen = () => {
       <div className='p-2 rounded-md bg-white shadow-md'>
         <Filter
           onChange={(txt) => {
-            setWhere({
-              ...where,
-              where: {
-                name: txt,
-              },
-            });
+            setName(txt);
           }}
         />
         <FoodTable take={where.take} isLoading={isLoading} data={data} />

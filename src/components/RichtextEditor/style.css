@@ -13,7 +13,5 @@
 }
 
 #root .ql-editor {
-  min-height: 30em;
-  max-height: 60em
+  min-height: 35em;
 }
-

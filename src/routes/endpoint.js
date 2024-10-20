@@ -6,6 +6,7 @@ export const ADMIN_ROUTES = {
 
   BLOG_MANAGER: '/blog-manager',
   BLOG_MANAGER_CREATE: '/blog-manager/create',
+  BLOG_MANAGER_CREATE_PREVIEW: '/blog-manager/create/preview',
 };
 
 export const AUTH_ROUTES = {

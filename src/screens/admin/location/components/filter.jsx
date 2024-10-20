@@ -14,7 +14,7 @@ function Filter({ onChange = () => {} }) {
   const { openModal } = useModal();
   const inputRef = useRef();
   const { onCreate, isLoading } = useCreateLocation();
-  const {showToast} = useToast()
+  const { showToast } = useToast();
 
   const handleUpload = (e) => {
     try {
@@ -47,16 +47,22 @@ function Filter({ onChange = () => {} }) {
       </div>
       <div className='flex justify-end items-center gap-2'>
         <input className='hidden' type='file' ref={inputRef} onChange={handleUpload} accept='.json' />
-        <Button onClick={() => {
-          inputRef.current.value = '';
-          inputRef.current.click();
-        }} startIcon={<UploadIcon />}>
+        <Button
+          onClick={() => {
+            inputRef.current.value = '';
+            inputRef.current.click();
+          }}
+          startIcon={<UploadIcon />}
+        >
           {isLoading && <Loader className='mr-2' />}
           Upload by json
         </Button>
-        <DownloadTemplateBtn keys={['name', 'label','longitude','latitude', 'lstImgs','address', 'description']} />
-        <ReadFileExcelBtn onResult={(data) => {
-          onCreate({ locations: data })}} />
+        <DownloadTemplateBtn keys={['name', 'label', 'longitude', 'latitude', 'lstImgs', 'address', 'description']} />
+        <ReadFileExcelBtn
+          onResult={(data) => {
+            onCreate({ locations: data });
+          }}
+        />
         <Button
           startIcon={<PlusIcon />}
           onClick={() => {

@@ -25,7 +25,7 @@ const SidebarItem = [
     icon: <LocationIcon />,
     key: ADMIN_ROUTES.LOCATION_MANAGER,
   },
-   {
+  {
     name: 'Blogs',
     icon: <LocationIcon />,
     key: ADMIN_ROUTES.BLOG_MANAGER,
@@ -69,6 +69,9 @@ function Sidebar() {
         break;
       case ADMIN_ROUTES.SETTING + '/access-control':
         setActiveKey(ADMIN_ROUTES.SETTING + '/access-control');
+        break;
+     case ADMIN_ROUTES.BLOG_MANAGER:
+        setActiveKey(ADMIN_ROUTES.BLOG_MANAGER);
         break;
       default:
         setActiveKey(ADMIN_ROUTES.DASHBOARD);

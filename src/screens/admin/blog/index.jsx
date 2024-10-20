@@ -19,7 +19,7 @@ function BlogManagerScreen() {
   const [searchKey, setSearchKey] = React.useState('');
   const router = useRouter();
   const { total, data, isLoading } = useBlogPagination(where);
-  const [debouncedName] = useDebounce(searchKey, 5000);
+  const [debouncedName] = useDebounce(searchKey, 200);
 
   useEffect(() => {
     setWhere({
@@ -31,7 +31,6 @@ function BlogManagerScreen() {
   }, [debouncedName]);
   return (
     <>
-      {' '}
       <Breadcrumb>
         <Breadcrumb.Item
           onClick={() => {
@@ -45,6 +44,7 @@ function BlogManagerScreen() {
       <div className='bg-white'>
         <HeaderBlogManager
           onChangeSearch={(val) => {
+            console.log(val);
             setSearchKey(val);
           }}
         />

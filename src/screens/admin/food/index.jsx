@@ -15,10 +15,8 @@ const FoodScreen = () => {
     take: 5,
   });
   const [name, setName] = React.useState('');
-
   const { data, refetch, total, isLoading } = useFoodPagination(where);
-
-  const [debouncedName] = useDebounce(name, 5000);
+  const [debouncedName] = useDebounce(name, 200);
 
   useEffect(() => {
     setWhere({

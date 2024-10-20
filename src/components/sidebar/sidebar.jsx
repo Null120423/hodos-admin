@@ -2,6 +2,7 @@ import GearIcon from '@rsuite/icons/Gear';
 import GridIcon from '@rsuite/icons/Grid';
 import LocationIcon from '@rsuite/icons/Location';
 import PageIcon from '@rsuite/icons/Page';
+import TextImageIcon from '@rsuite/icons/TextImage';
 import React, { Fragment, useEffect } from 'react';
 import { Nav, Sidenav } from 'rsuite';
 import { useSidebar } from '../../contexts/sidebar.context';
@@ -27,7 +28,7 @@ const SidebarItem = [
   },
   {
     name: 'Blogs',
-    icon: <LocationIcon />,
+    icon: <TextImageIcon />,
     key: ADMIN_ROUTES.BLOG_MANAGER,
   },
   {

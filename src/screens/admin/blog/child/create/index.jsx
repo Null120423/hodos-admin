@@ -1,6 +1,6 @@
 import PcIcon from '@rsuite/icons/Pc';
 import PlusIcon from '@rsuite/icons/Plus';
-import { useState } from 'react';
+import { memo, useRef, useState } from 'react';
 import { Breadcrumb, Button, Input, Loader, Uploader } from 'rsuite';
 import Editor from '../../../../../components/RichtextEditor';
 import TagInput from '../../../../../components/tag-input';
@@ -13,20 +13,24 @@ function Create() {
   const { onCreate, isLoading } = useCreateBlog();
   const { showToast } = useToast();
   const [isPreview, setIsPreview] = useState(false);
+  const editorRef = useRef(null);
   const [state, setState] = useState({
     title: '',
     tags: [],
-    content: '',
     thumbnail: '',
   });
   const router = useRouter();
 
   const handleCreate = () => {
+    const content = editorRef.current.getContent();
+    console.log({
+        content
+    })
     const messageErr = [];
     if (state.title === '') {
       messageErr.push('title ');
     }
-    if (state.content === '') {
+    if (content === '') {
       messageErr.push('content');
     }
     if (state.thumbnail === '') {
@@ -44,13 +48,13 @@ function Create() {
     const body = {
       title: state.title,
       tags: state.tags.join(','),
-      content: state.content,
+      content: content,
       thumbnail: state.thumbnail,
     };
     onCreate(body);
   };
 
-  console.log(state)
+
   return (
     <>
       {isPreview && (
@@ -119,10 +123,8 @@ function Create() {
 
           <div className='flex flex-col gap-2'>
             <Editor
+            ref={editorRef}
               placeholder={'Write something...'}
-              onChangeValue={(val) => {
-                setState({ ...state, content: val });
-              }}
             />
           </div>
 
@@ -146,4 +148,4 @@ function Create() {
   );
 }
 
-export default Create;
+export default memo(Create);

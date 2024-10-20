@@ -44,7 +44,6 @@ function BlogManagerScreen() {
       <div className='bg-white'>
         <HeaderBlogManager
           onChangeSearch={(val) => {
-            console.log(val);
             setSearchKey(val);
           }}
         />

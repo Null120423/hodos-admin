@@ -1,39 +1,45 @@
 import BlotFormatter from 'quill-blot-formatter';
 import 'quill/dist/quill.snow.css';
-import { useEffect } from 'react';
+import { forwardRef, memo, useEffect, useImperativeHandle, useLayoutEffect } from 'react';
 import { useQuill } from 'react-quilljs';
 
 import './style.css';
 
-const Editor = ({ onChangeValue }) => {
-  const { quill, quillRef, Quill } = useQuill({
+const Editor = forwardRef(({ onChangeValue }, ref) => {
+  const { quill, quillRef, Quill } = useQuill({ 
     modules: { blotFormatter: {} },
   });
 
-  if (Quill && !quill) {
+  useLayoutEffect(() => {
+    if (Quill && !quill) {
     // const BlotFormatter = require('quill-blot-formatter');
-    Quill.register('modules/blotFormatter', BlotFormatter);
-  }
+      Quill.register('modules/blotFormatter', BlotFormatter);
+    }
+  }, [])
+  
 
   useEffect(() => {
     if (quill) {
-      quill.on('text-change', (delta, oldContents) => {
-        console.log('Text change!');
-        console.log(delta);
-
-        let currrentContents = quill.getContents();
-        console.log(currrentContents.diff(oldContents));
-
+      quill.on('text-change', () => {
         onChangeValue(quill.root.innerHTML);
       });
     }
-  }, [quill, Quill]);
+  }, []);
+
+   useImperativeHandle(ref, () => ({
+    getContent: () => {
+      if (quill) {
+        return quill.root.innerHTML;
+      }
+      return '';
+    }
+  }));
 
   return (
     <div>
       <div ref={quillRef} />
     </div>
   );
-};
+});
 
-export default Editor;
+export default memo(Editor);

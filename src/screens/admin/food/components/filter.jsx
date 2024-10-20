@@ -72,7 +72,6 @@ function Filter({ onChange = () => {} }) {
         />
         <ReadFileExcelBtn
           onResult={(data) => {
-            console.log(data);
             onCreate({ foods: data });
           }}
         />

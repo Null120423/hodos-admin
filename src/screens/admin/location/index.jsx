@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
-import { Breadcrumb } from 'rsuite';
+import { Breadcrumb, Loader } from 'rsuite';
 import { useDebounce } from 'use-debounce';
-import LoaderCustom from '../../../components/loader-custom';
 import PaginationCustom from '../../../components/pagination';
 import useLocationPagination from '../../../service/hooks/admin/location/useLocationPagination';
 import Filter from './components/filter';
@@ -29,7 +28,6 @@ const LocationScreen = () => {
     refetch();
   }, [refetch, where.skip, where.take]);
 
-  console.log(isLoading)
   return (
     <>
       <Breadcrumb>
@@ -39,9 +37,6 @@ const LocationScreen = () => {
         </Breadcrumb.Item>
       </Breadcrumb>
       <div className='p-2 rounded-md bg-white shadow-md'>
-        {
-          isLoading && <LoaderCustom/>
-        }
         <Filter
         valueFilter={where?.where}
           onChange={(val) => {
@@ -54,7 +49,11 @@ const LocationScreen = () => {
           }}
         />
         <LocationTable take={where.take} isLoading={isLoading} data={data} />
-        <PaginationCustom
+        {
+          isLoading && <Loader/>
+        }
+       {
+        !isLoading &&  <PaginationCustom
           onChangeLimit={(take) => {
             setWhere({
               ...where,
@@ -69,6 +68,7 @@ const LocationScreen = () => {
             })
           }
         />
+       }
       </div>
     </>
   );

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Breadcrumb, Loader } from 'rsuite';
+import { Breadcrumb } from 'rsuite';
 import { useDebounce } from 'use-debounce';
 import PaginationCustom from '../../../components/pagination';
 import useLocationPagination from '../../../service/hooks/admin/location/useLocationPagination';
@@ -48,12 +48,8 @@ const LocationScreen = () => {
             });
           }}
         />
-        <LocationTable take={where.take} isLoading={isLoading} data={data} />
-        {
-          isLoading && <Loader/>
-        }
-       {
-        !isLoading &&  <PaginationCustom
+          <LocationTable take={where.take} isLoading={isLoading} data={data} />
+     <PaginationCustom
           onChangeLimit={(take) => {
             setWhere({
               ...where,
@@ -68,7 +64,6 @@ const LocationScreen = () => {
             })
           }
         />
-       }
       </div>
     </>
   );

@@ -1,9 +1,10 @@
-import LoaderCustom from '../loader-custom';
+import { Loader } from 'rsuite';
 
 function LoadingView() {
   return (
-    <div className='flex w-full h-full justify-center items-center'>
-      <LoaderCustom />
+    <div className='flex flex-col gap-2 w-full h-full justify-center items-center'>
+      <Loader/>
+      <h1>Loading ...</h1>
     </div>
   );
 }

@@ -2,7 +2,6 @@ import PcIcon from '@rsuite/icons/Pc';
 import PlusIcon from '@rsuite/icons/Plus';
 import { memo, useRef, useState } from 'react';
 import { Breadcrumb, Button, Input, Loader, Uploader } from 'rsuite';
-import Editor from '../../../../../components/RichtextEditor';
 import TagInput from '../../../../../components/tag-input';
 import { useToast } from '../../../../../contexts/toast.context';
 import { ADMIN_ROUTES } from '../../../../../routes/endpoint';
@@ -122,10 +121,10 @@ function Create() {
         </div>
 
           <div className='flex flex-col gap-2'>
-            <Editor
+            {/* <Editor
             ref={editorRef}
               placeholder={'Write something...'}
-            />
+            /> */}
           </div>
 
           <div className='flex w-full justify-start items-center gap-2'>

@@ -39,14 +39,15 @@ const Item = ({ data }) => {
             stopLoading()
         }
     }, [isLoading])
+
   return (
     <div onClick={()=> {
         openModal(<DetailView data={data} />, data.title)
-    }} className=' cursor-pointer group relative transition-all h-fit min-h-[10rem] hover:shadow-md bg-white rounded-md border-black/10 border-solid border-[1px] p-4'>
-      <div className='flex justify-between'>
-        <div className='flex gap-2 w-full'>
-          <h1 className='text-xl font-semibold w-1/3'>{data.title}</h1>
-          <img src={data.thumbnail} alt='thumbnail' className='h-[8rem] object-cover rounded-md mt-2' />
+    }} className='h-[14rem] cursor-pointer overflow-hidden group relative transition-all min-h-[5rem] hover:shadow-md bg-white rounded-xl'>
+      <img src={data.thumbnail} alt='thumbnail' className='rounded-xl object-cover ' />
+      <div className='flex justify-between  absolute right-0 rounded-tl-xl p-4 rounded-xl bottom-0 left-0 bg-black/5 backdrop-blur-md'>
+        <div className='flex flex-col gap-2 w-full'>
+          <h1 className='text-2xl font-semibold text-white'>{data.title}</h1>
           <div className='flex'>
             {data.tags?.split(',').map((tag, index) => (
               <span key={index} className='bg-gray-200 p-2 rounded-md mr-2'>
@@ -54,12 +55,14 @@ const Item = ({ data }) => {
               </span>
             ))}
           </div>
-        </div>
-      </div>
-        <div className='hidden absolute right-2 top-2 group-hover:flex gap-2 justify-end w-full'>
+
+              <div className=' h-10 flex gap-2 justify-start w-full'>
           <IconButton color="blue" appearance="primary"  icon={<EditIcon />}/>
           <IconButton onClick={handleConfirmDelete}  color="red" appearance="primary" icon={<TrashIcon />}/>
         </div>
+        </div>
+        
+      </div>
     </div>
   );
 };
@@ -69,7 +72,7 @@ function BlogView({ data, isLoading }) {
   }
   return (
     <>
-      <div className='grid grid-cols-3 gap-5 p-4 min-h-[30rem]'>
+      <div className='grid grid-cols-5 gap-5 p-4 min-h-[30rem]'>
         {data?.map((item, index) => (
           <Item key={index} data={item} />
         ))}

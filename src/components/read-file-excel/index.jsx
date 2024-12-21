@@ -21,7 +21,7 @@ export const readExcelFile = (file) => {
   });
 };
 
-function ReadFileExcelBtn({ onResult }) {
+function ReadFileExcelBtn({ onResult , isLoading}) {
   const file = useRef(null);
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
@@ -39,6 +39,7 @@ function ReadFileExcelBtn({ onResult }) {
     <>
       <input className='hidden' type='file' ref={file} accept='.xlsx, .xls' onChange={handleFileChange} />
       <Button
+      isLoading={isLoading}
         onClick={() => {
           if (file) {
             file.current.value = '';

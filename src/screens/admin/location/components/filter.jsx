@@ -68,8 +68,9 @@ function Filter({ onChange = () => {} ,valueFilter }) {
           {isLoading && <Loader className='mr-2' />}
           Upload by json
         </Button>
-        <DownloadTemplateBtn keys={['name', 'label', 'longitude', 'latitude', 'lstImgs', 'address', 'description']} />
+        <DownloadTemplateBtn keys={['name', 'label', 'longitude', 'latitude', 'lstImgs', 'address', 'description', 'type']} />
         <ReadFileExcelBtn
+        isLoading={isLoading}
           onResult={(data) => {
             onCreate({ locations: data });
           }}

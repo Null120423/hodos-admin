@@ -7,6 +7,7 @@ import rootApi from '../../../rootApi';
 
 const useCreateLocation = () => {
   const query = useQueryClient();
+
   const { closeModal } = useModal();
   const { showToast } = useToast();
   const { isPending, isError, data, error, mutateAsync } = useMutation({

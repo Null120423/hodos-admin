@@ -1,6 +1,6 @@
 import PlusIcon from '@rsuite/icons/Plus';
 import { useRef } from 'react';
-import { Button, Loader } from 'rsuite';
+import { Button, Loader, SelectPicker } from 'rsuite';
 import UploadIcon from '../../../../assets/svg/upload-icon';
 import DownloadTemplateBtn from '../../../../components/download-template-btn';
 import ReadFileExcelBtn from '../../../../components/read-file-excel';
@@ -9,8 +9,16 @@ import { useModal } from '../../../../contexts/modal.context';
 import { useToast } from '../../../../contexts/toast.context';
 import useCreateLocation from '../../../../service/hooks/admin/location/useCreate';
 import FormCreateLocation from './form-create';
-
-function Filter({ onChange = () => {} }) {
+const typesLocation = [{
+  label: 'Location',
+  value: 'LOCATION',
+}, {
+    label: 'Food',
+  value: 'FOOD',
+}].map(
+  item => ({ label: item?.label, value: item?.value })
+);
+function Filter({ onChange = () => {} ,valueFilter }) {
   const { openModal } = useModal();
   const inputRef = useRef();
   const { onCreate, isLoading } = useCreateLocation();
@@ -43,10 +51,13 @@ function Filter({ onChange = () => {} }) {
   return (
     <div className='w-full flex justify-start items-center p-2 gap-2'>
       <div className='p-2 w-full flex justify-center items-center mt-[10px]'>
-        <SearchInput onChange={(txt) => onChange(txt)} placeholder='Search by name, label, address, description, ...' />
+        <SearchInput onChange={(val) => onChange({ ...valueFilter, name: val })} placeholder='Search by name, label, address, description, ...' />
       </div>
       <div className='flex justify-end items-center gap-2'>
         <input className='hidden' type='file' ref={inputRef} onChange={handleUpload} accept='.json' />
+        <SelectPicker value={valueFilter.type} onChange={val => {
+          onChange({ ...valueFilter, type: val });
+        }} placeholder='Select type of location' data={typesLocation} style={{ width: 224 }} />
         <Button
           onClick={() => {
             inputRef.current.value = '';

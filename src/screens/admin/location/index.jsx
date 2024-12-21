@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Breadcrumb } from 'rsuite';
 import { useDebounce } from 'use-debounce';
+import LoaderCustom from '../../../components/loader-custom';
 import PaginationCustom from '../../../components/pagination';
 import useLocationPagination from '../../../service/hooks/admin/location/useLocationPagination';
 import Filter from './components/filter';
@@ -10,6 +11,7 @@ const LocationScreen = () => {
   const [where, setWhere] = React.useState({
     where: {
       name: '',
+      type: ''
     },
     skip: 0,
     take: 5,
@@ -27,6 +29,7 @@ const LocationScreen = () => {
     refetch();
   }, [refetch, where.skip, where.take]);
 
+  console.log(isLoading)
   return (
     <>
       <Breadcrumb>
@@ -36,12 +39,16 @@ const LocationScreen = () => {
         </Breadcrumb.Item>
       </Breadcrumb>
       <div className='p-2 rounded-md bg-white shadow-md'>
+        {
+          isLoading && <LoaderCustom/>
+        }
         <Filter
-          onChange={(txt) => {
+        valueFilter={where?.where}
+          onChange={(val) => {
             setWhere({
               ...where,
               where: {
-                name: txt,
+               ...val
               },
             });
           }}

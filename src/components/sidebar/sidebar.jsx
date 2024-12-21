@@ -1,7 +1,6 @@
 import GearIcon from '@rsuite/icons/Gear';
 import GridIcon from '@rsuite/icons/Grid';
 import LocationIcon from '@rsuite/icons/Location';
-import PageIcon from '@rsuite/icons/Page';
 import TextImageIcon from '@rsuite/icons/TextImage';
 import React, { Fragment, useEffect } from 'react';
 import { Nav, Sidenav } from 'rsuite';
@@ -15,11 +14,6 @@ const SidebarItem = [
     name: 'Dashboard',
     icon: <GridIcon />,
     key: ADMIN_ROUTES.DASHBOARD,
-  },
-  {
-    name: 'Foods',
-    icon: <PageIcon />,
-    key: ADMIN_ROUTES.FOOD_MANAGER,
   },
   {
     name: 'Locations',
@@ -59,9 +53,6 @@ function Sidebar() {
       case ADMIN_ROUTES.DASHBOARD:
         setActiveKey(ADMIN_ROUTES.DASHBOARD);
         break;
-      case ADMIN_ROUTES.FOOD_MANAGER:
-        setActiveKey(ADMIN_ROUTES.FOOD_MANAGER);
-        break;
       case ADMIN_ROUTES.LOCATION_MANAGER:
         setActiveKey(ADMIN_ROUTES.LOCATION_MANAGER);
         break;
@@ -71,12 +62,13 @@ function Sidebar() {
       case ADMIN_ROUTES.SETTING + '/access-control':
         setActiveKey(ADMIN_ROUTES.SETTING + '/access-control');
         break;
-     case ADMIN_ROUTES.BLOG_MANAGER:
-        setActiveKey(ADMIN_ROUTES.BLOG_MANAGER);
-        break;
       default:
         setActiveKey(ADMIN_ROUTES.DASHBOARD);
         break;
+    }
+
+    if(pathname.includes(ADMIN_ROUTES.BLOG_MANAGER)){
+      setActiveKey(ADMIN_ROUTES.BLOG_MANAGER);
     }
   }, [pathname]);
 

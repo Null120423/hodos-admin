@@ -1,6 +1,6 @@
 import BlotFormatter from 'quill-blot-formatter';
 import 'quill/dist/quill.snow.css';
-import { forwardRef, memo, useEffect, useImperativeHandle, useLayoutEffect } from 'react';
+import { forwardRef, memo, useEffect, useImperativeHandle } from 'react';
 import { useQuill } from 'react-quilljs';
 
 import './style.css';
@@ -10,12 +10,11 @@ const Editor = forwardRef(({ onChangeValue }, ref) => {
     modules: { blotFormatter: {} },
   });
 
-  useLayoutEffect(() => {
     if (Quill && !quill) {
     // const BlotFormatter = require('quill-blot-formatter');
       Quill.register('modules/blotFormatter', BlotFormatter);
     }
-  }, [])
+
   
 
   useEffect(() => {

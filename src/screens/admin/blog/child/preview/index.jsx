@@ -1,5 +1,5 @@
-import { Breadcrumb } from 'rsuite';
-
+import ArrowLeftLineIcon from '@rsuite/icons/ArrowLeftLine';
+import { Breadcrumb, Button } from 'rsuite';
 function PreviewScreen({ data, onReturn }) {
   return (
     <div className='w-full overflow-hidden'>
@@ -8,6 +8,8 @@ function PreviewScreen({ data, onReturn }) {
         <Breadcrumb.Item onClick={onReturn}>Create</Breadcrumb.Item>
         <Breadcrumb.Item active>Preview</Breadcrumb.Item>
       </Breadcrumb>
+        <Button appearance='primary' startIcon={<ArrowLeftLineIcon/>}onClick={onReturn}>Return</Button>
+
       <h1 className='text-3xl'>{data.title}</h1>
 
       <div className='flex'>

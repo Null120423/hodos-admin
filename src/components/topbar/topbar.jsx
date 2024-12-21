@@ -60,7 +60,7 @@ const TopBar = () => {
       <div
         className={`sticky shadow-md w-full rounded-lg left-0 flex justify-between items-center right-0 top-0 z-50 p-6 bg-white/10 backdrop-blur-3xl `}
       >
-        <h1 className='text-2xl font-bold'>Overview</h1>
+        <h1 className='text-2xl font-bold'>Welcome to hodos ADMIN</h1>
         <div className='flex justify-end items-center gap-2'>
           <Button className='h-[2.3rem] p-2'>
             <div className='flex items-center h-full justify-center gap-2'>

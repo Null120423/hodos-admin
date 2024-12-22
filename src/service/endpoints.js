@@ -24,10 +24,15 @@ export const endpoints = {
       CREATE: 'location/create',
       CREATE_MULTI: 'location/multi-create',
       REMOVE_SOFT: 'location/soft',
-      UPDATE: 'api/update-location',
+      UPDATE: 'location/update',
       DELETE: 'api/delete-location',
       GET_ALL: 'api/get-all-location',
       GET_BY_ID: 'api/get-location',
+    },
+
+    LOG: {
+      BUILD_LOG_PAG: 'log/build-log',
+      ERROR_LOG_PAG: 'log/error-log',
     },
   },
 };

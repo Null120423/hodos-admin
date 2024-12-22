@@ -5,14 +5,13 @@ import { useToast } from '../../../../contexts/toast.context';
 import { endpoints } from '../../../endpoints';
 import rootApi from '../../../rootApi';
 
-const useCreateLocation = () => {
+const useUpdateLocation = () => {
   const query = useQueryClient();
-
   const { closeModal } = useModal();
   const { showToast } = useToast();
   const { isPending, isError, data, error, mutateAsync } = useMutation({
     mutationFn: (variables) => {
-      return rootApi.post(endpoints.API.LOCATION.CREATE, variables);
+      return rootApi.put(endpoints.API.LOCATION.UPDATE, variables);
     },
     onError: (e) => {
       showToast(e?.response?.data?.message || 'Đã có lỗi xảy ra', { type: 'error' });
@@ -29,8 +28,8 @@ const useCreateLocation = () => {
     isError,
     data,
     error,
-    onCreate: mutateAsync,
+    onUpdate: mutateAsync,
   };
 };
 
-export default useCreateLocation;
+export default useUpdateLocation;

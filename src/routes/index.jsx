@@ -17,6 +17,8 @@ export const LocationManagerPage = lazy(() => import('../screens/admin/location/
 export const SettingPage = lazy(() => import('../screens/admin/setting/index'));
 export const BlogManagerPage = lazy(() => import('../screens/admin/blog/index'));
 export const BlogManagerCreatePage = lazy(() => import('../screens/admin/blog/child/create/index'));
+export const BuildLogPage = lazy(() => import('../screens/admin/build-log/index'));
+export const ErrorLogPage = lazy(() => import('../screens/admin/error-log/index'));
 
 //#endregion
 
@@ -52,6 +54,8 @@ const AdminRoute = [
       { path: ADMIN_ROUTES.SETTING, element: <SettingPage /> },
       { path: ADMIN_ROUTES.BLOG_MANAGER, element: <BlogManagerPage /> },
       { path: ADMIN_ROUTES.BLOG_MANAGER_CREATE, element: <BlogManagerCreatePage /> },
+      { path: ADMIN_ROUTES.BUILD_LOGS, element: <BuildLogPage /> },
+      { path: ADMIN_ROUTES.ERROR_LOGS, element: <ErrorLogPage /> },
     ],
   },
 ];

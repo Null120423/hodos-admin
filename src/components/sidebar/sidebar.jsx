@@ -1,7 +1,9 @@
+import CodeIcon from '@rsuite/icons/Code';
 import GearIcon from '@rsuite/icons/Gear';
 import GridIcon from '@rsuite/icons/Grid';
 import LocationIcon from '@rsuite/icons/Location';
 import TextImageIcon from '@rsuite/icons/TextImage';
+import WarningRoundIcon from '@rsuite/icons/WarningRound';
 import React, { Fragment, useEffect } from 'react';
 import { Nav, Sidenav } from 'rsuite';
 import { useSidebar } from '../../contexts/sidebar.context';
@@ -9,6 +11,7 @@ import { ADMIN_ROUTES } from '../../routes/endpoint';
 import { usePathname } from '../../routes/hooks/use-pathname';
 import { useRouter } from '../../routes/hooks/use-router';
 export const SIDEBAR_WIDTH = '20rem';
+
 const SidebarItem = [
   {
     name: 'Dashboard',
@@ -25,6 +28,9 @@ const SidebarItem = [
     icon: <TextImageIcon />,
     key: ADMIN_ROUTES.BLOG_MANAGER,
   },
+];
+
+const SettingSidebarItem = [
   {
     name: 'Settings',
     icon: <GearIcon />,
@@ -39,6 +45,19 @@ const SidebarItem = [
         key: ADMIN_ROUTES.SETTING + '/access-control',
       },
     ],
+  },
+];
+
+const LogSidebars = [
+  {
+    name: 'Build logs',
+    icon: <CodeIcon />,
+    key: ADMIN_ROUTES.BUILD_LOGS,
+  },
+   {
+    name: 'Bug logs',
+    icon: <WarningRoundIcon />,
+    key: ADMIN_ROUTES.ERROR_LOGS,
   },
 ];
 
@@ -62,8 +81,9 @@ function Sidebar() {
       case ADMIN_ROUTES.SETTING + '/access-control':
         setActiveKey(ADMIN_ROUTES.SETTING + '/access-control');
         break;
+
       default:
-        setActiveKey(ADMIN_ROUTES.DASHBOARD);
+        setActiveKey(pathname);
         break;
     }
 
@@ -116,10 +136,15 @@ function Sidebar() {
   return (
     <Sidenav expanded={expanded} className={`${expanded && 'shadow-xl w-[15rem]'} h-screen  `}>
       <Sidenav.Header className='min-h-20'>
-        {expanded && <div className='p-4 text-center font-bold text-2xl text-pretty'>DashBoard</div>}
+        {expanded && <div className='p-4 text-center font-bold text-2xl text-pretty'>HODOS</div>}
       </Sidenav.Header>
       <Sidenav.Body>
-        <Nav activeKey={activeKey}>{renderNavItems(SidebarItem)}</Nav>
+        <h1 className={`font-semibold ${expanded ? 'text-lg pl-4 ': 'text-sm pl-2 '} mb-2`}>Generals</h1>
+        <Nav activeKey={activeKey} >{renderNavItems(SidebarItem)}</Nav>
+         <h1 className={`font-semibold ${expanded ? 'text-lg pl-4 ': 'text-sm pl-2 '} mb-2`}>Logs</h1>
+        <Nav activeKey={activeKey} >{renderNavItems(LogSidebars)}</Nav>
+        <h1 className={`font-semibold ${expanded ? 'text-lg pl-4 ': 'text-sm pl-2 '} mb-2`}>Settings</h1>
+        <Nav activeKey={activeKey} >{renderNavItems(SettingSidebarItem)}</Nav>
       </Sidenav.Body>
       <Sidenav.Toggle onToggle={() => setExpanded(!expanded)} />
     </Sidenav>

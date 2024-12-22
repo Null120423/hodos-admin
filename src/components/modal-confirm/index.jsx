@@ -1,30 +1,24 @@
-import { Button, ButtonToolbar, Message } from 'rsuite';
-import { useModal } from '../../contexts/modal.context';
+import { Button, ButtonToolbar, Notification, useToaster } from 'rsuite';
 
-function ModalConfirm({ title, subTitle, onConfirm, onCancel }) {
-  const { closeModal } = useModal();
+function ModalConfirm({  subTitle, onConfirm }) {
+  const toaster = useToaster();
   return (
     <div>
-      <Message showIcon type='warning' header={title || ''}>
-        {subTitle || 'Are you sure you want to delete this item?'}
-        <hr />
-      </Message>
-      <ButtonToolbar className='mt-2 flex justify-end items-center'>
-        <Button size='lg' appearance='primary' onClick={onConfirm}>
-          Confirm
-        </Button>
-        <Button
-          size='lg'
-          color='red'
-          appearance='ghost'
-          onClick={() => {
-            closeModal();
-            onCancel();
-          }}
-        >
-          Cancel
-        </Button>
+        <Notification type={'info'} header={`${'Confirm remove this record!'}!`} >
+      <p> {subTitle || 'Are you sure you want to delete this item?'}</p>
+      <hr />
+
+      <div className='mt-2'></div>
+      <ButtonToolbar>
+        <Button appearance="primary" onClick={async ()=> {
+          await onConfirm();
+          toaster.clear();
+        }}>Ok</Button>
+        <Button appearance="default" onClick={()=> {
+          toaster.clear();
+        }}>Cancel</Button>
       </ButtonToolbar>
+    </Notification>
     </div>
   );
 }

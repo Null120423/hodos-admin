@@ -1,13 +1,16 @@
+import EditIcon from '@rsuite/icons/Edit';
 import TrashIcon from '@rsuite/icons/Trash';
 import { useEffect } from 'react';
-import { IconButton, Placeholder, Table, Tooltip, Whisper } from 'rsuite';
+import { IconButton, Placeholder, Table, Tooltip, useToaster, Whisper } from 'rsuite';
 import ModalConfirm from '../../../../components/modal-confirm';
 import { useLoading } from '../../../../contexts/loading-global';
 import { useModal } from '../../../../contexts/modal.context';
 import useSoftRemoveLocation from '../../../../service/hooks/admin/location/useSoftRemove';
 import { DetailItem } from '../../dashboard/components/lst-item';
-const { Column, HeaderCell, Cell } = Table;
+import FormCreateLocation from './form-create';
 
+
+const { Column, HeaderCell, Cell } = Table;
 const ImageCell = ({ rowData, ...props }) => (
   <Cell {...props} style={{ padding: 10, display: 'flex', justifyItems: 'center', alignItems: 'center' }}>
     <img src={rowData.img} width='80' className='rounded-md' />
@@ -15,22 +18,23 @@ const ImageCell = ({ rowData, ...props }) => (
 );
 
 const ActionCell = ({ ...props }) => {
+   const toaster = useToaster();
   const { openModal } = useModal();
   const { startLoading, stopLoading } = useLoading();
   const { onRemove, isLoading } = useSoftRemoveLocation();
   const handleRemove = (id) => {
-    openModal(
-      <ModalConfirm
-        title={''}
-        subTitle={'Do you confirm remove this record!'}
-        onConfirm={async () => {
+    toaster.push(<ModalConfirm   
+        subTitle={'Do you confirm remove this record!'}  onConfirm={async () => {
           await onRemove({
             id,
           });
-        }}
-      />,
-      'Confirm',
-    );
+        }}/>, {
+          placement: 'topEnd'
+        })
+  };
+
+    const handleEdit = (data) => {
+      openModal(<FormCreateLocation data={data}  />, 'Edit Location');
   };
 
   useEffect(() => {
@@ -51,7 +55,21 @@ const ActionCell = ({ ...props }) => {
       }}
     >
       <div className='flex gap-2 flex-wrap'>
-        <Whisper placement='top' trigger='hover' speaker={<Tooltip>Remove this food</Tooltip>}>
+
+          <Whisper placement='top' trigger='hover' speaker={<Tooltip>Edit this location</Tooltip>}>
+          <IconButton
+            onClick={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              handleEdit(props.rowData);
+            }}
+            color='#1575E0'
+            appearance='primary'
+            icon={<EditIcon />}
+          />
+        </Whisper>
+
+        <Whisper placement='top' trigger='hover' speaker={<Tooltip>Remove this location</Tooltip>}>
           <IconButton
             onClick={(e) => {
               e.stopPropagation();
@@ -63,6 +81,7 @@ const ActionCell = ({ ...props }) => {
             icon={<TrashIcon />}
           />
         </Whisper>
+     
       </div>
     </Cell>
   );

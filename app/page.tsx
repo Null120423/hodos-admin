@@ -1,5 +1,13 @@
-import Dashboard from "@/dashboard"
+import { AuthProvider } from "@/hooks/use-auth"
+import { ProtectedRoute } from "@/components/protected-route"
+import { AdminDashboard } from "@/components/admin-dashboard"
 
-export default function Home() {
-  return <Dashboard />
+export default function HomePage() {
+  return (
+    <AuthProvider>
+      <ProtectedRoute>
+        <AdminDashboard />
+      </ProtectedRoute>
+    </AuthProvider>
+  )
 }

@@ -96,9 +96,8 @@
         "transform": "lodash/{{member}}"
       }
     },
-    "outputFileTracingRoot": "/Volumes/T7/hodos-admin",
+    "outputFileTracingRoot": "/Users/genny/WORK/HODOS/hodos-admin",
     "experimental": {
-      "allowedDevOrigins": [],
       "nodeMiddleware": false,
       "cacheLife": {
         "default": {
@@ -147,6 +146,7 @@
       "linkNoTouchStart": false,
       "caseSensitiveRoutes": false,
       "clientSegmentCache": false,
+      "dynamicOnHover": false,
       "preloadEntriesOnStart": true,
       "clientRouterFilter": true,
       "clientRouterFilterRedirects": false,
@@ -154,7 +154,7 @@
       "middlewarePrefetch": "flexible",
       "optimisticClientCache": true,
       "manualClientBasePath": false,
-      "cpus": 7,
+      "cpus": 9,
       "memoryBasedWorkersCount": false,
       "imgOptConcurrency": null,
       "imgOptTimeoutInSeconds": 7,
@@ -174,9 +174,6 @@
       "swcTraceProfiling": false,
       "forceSwcTransforms": false,
       "largePageDataBytes": 128000,
-      "turbo": {
-        "root": "/Volumes/T7/hodos-admin"
-      },
       "typedRoutes": false,
       "typedEnv": false,
       "parallelServerCompiles": false,
@@ -187,6 +184,7 @@
       "optimizeServerReact": true,
       "useEarlyImport": false,
       "viewTransition": false,
+      "routerBFCache": false,
       "staleTimes": {
         "dynamic": 0,
         "static": 300
@@ -277,11 +275,14 @@
       "trustHostHeader": false,
       "isExperimentalCompile": false
     },
-    "htmlLimitedBots": "Mediapartners-Google|Slurp|DuckDuckBot|baiduspider|yandex|sogou|bitlybot|tumblr|vkShare|quora link preview|redditbot|ia_archiver|Bingbot|BingPreview|applebot|facebookexternalhit|facebookcatalog|Twitterbot|LinkedInBot|Slackbot|Discordbot|WhatsApp|SkypeUriPreview",
+    "htmlLimitedBots": "Mediapartners-Google|Slurp|DuckDuckBot|baiduspider|yandex|sogou|bitlybot|tumblr|vkShare|quora link preview|redditbot|ia_archiver|Bingbot|BingPreview|applebot|facebookexternalhit|facebookcatalog|Twitterbot|LinkedInBot|Slackbot|Discordbot|WhatsApp|SkypeUriPreview|Yeti",
     "bundlePagesRouterDependencies": false,
-    "configFileName": "next.config.mjs"
+    "configFileName": "next.config.mjs",
+    "turbopack": {
+      "root": "/Users/genny/WORK/HODOS/hodos-admin"
+    }
   },
-  "appDir": "/Volumes/T7/hodos-admin",
+  "appDir": "/Users/genny/WORK/HODOS/hodos-admin",
   "relativeAppDir": "",
   "files": [
     ".next/routes-manifest.json",
@@ -303,6 +304,6 @@
     ".next/server/next-font-manifest.json"
   ],
   "ignore": [
-    "node_modules/next/dist/compiled/@ampproject/toolbox-optimizer/**/*"
+    "../../../.nvm/versions/node/v23.8.0/lib/node_modules/next/dist/compiled/@ampproject/toolbox-optimizer/**/*"
   ]
 }

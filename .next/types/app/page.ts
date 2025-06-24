@@ -1,4 +1,4 @@
-// File: /Volumes/T7/hodos-admin/app/page.tsx
+// File: /Users/genny/WORK/HODOS/hodos-admin/app/page.tsx
 import * as entry from '../../../app/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

@@ -17,7 +17,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://hodos-hackaton.genny.id.vn',
+        target: 'https://hodos-api.genny.id.vn',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
       },

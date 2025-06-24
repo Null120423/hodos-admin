@@ -91,7 +91,7 @@ const FormCreateLocation = ({data}) => {
           }}
           multiple
           onChange={setFileList}
-          action='https://hodos-hackathon.genny.id.vn/common/upload-image'
+          action='https://hodos-api.genny.id.vn/common/upload-image'
         >
           <Button>Select files...</Button>
         </Uploader>

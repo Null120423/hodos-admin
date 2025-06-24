@@ -107,7 +107,7 @@ function Create() {
             onSuccess={(res) => {
                 setState({ ...state, thumbnail: res.url });
             }}
-            action='https://hodos-hackathon.genny.id.vn/common/upload-image'
+            action='https://hodos-api.genny.id.vn/common/upload-image'
             >
                 <Button appearance='ghost' icon={<PlusIcon/>}>Choose thumbnail</Button>
             </Uploader>

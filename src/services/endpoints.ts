@@ -61,5 +61,11 @@ export const endpoints = {
       DELETE_OPTION: (id: string) => `master-data/plan-question-option/${id}`,
     },
     //#endregion
+
+    //#region transaction
+    TRANSACTION: {
+      PAGINATION: "transaction/pagination",
+    },
+    //#endregion
   },
 };

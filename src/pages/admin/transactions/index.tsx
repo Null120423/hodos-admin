@@ -15,7 +15,9 @@ import {
   Typography,
 } from "antd";
 import { FileUp, Filter, ScanEyeIcon, Search } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+import useTransactionPagination from "@/services/hooks/admin/transactions/useTransactionPagination";
 
 const { Header, Content } = Layout;
 const { Title, Text } = Typography;
@@ -33,64 +35,6 @@ export enum TransactionStatus {
   PARTIALLY_REFUNDED = "partially_refunded",
   PROCESSING = "processing",
 }
-
-// Mock data for transactions
-const mockTransactions = [
-  {
-    id: "1",
-    userId: "user-1",
-    user: { id: "user-1", name: "Nguyen Van A" },
-    type: TransactionType.SUBSCRIPTION_PAYMENT,
-    description: "Monthly subscription fee for Premium Plan",
-    amount: 19.99,
-    currency: "USD",
-    status: TransactionStatus.SUCCESSFUL,
-    paymentGateway: "Stripe",
-    gatewayTransactionId: "pi_1234567890",
-    relatedEntityId: "sub-1",
-    relatedEntityType: "UserSubscription",
-    metadata: { method: "card", ip: "127.0.0.1" },
-    processedAt: "2024-01-20T14:45:00Z",
-    createdAt: "2024-01-20T14:40:00Z",
-    updatedAt: "2024-01-20T14:45:00Z",
-  },
-  {
-    id: "2",
-    userId: "user-2",
-    user: { id: "user-2", name: "Tran Thi B" },
-    type: TransactionType.SUBSCRIPTION_PAYMENT,
-    description: "Monthly subscription fee for Premium Plan",
-    amount: 19.99,
-    currency: "USD",
-    status: TransactionStatus.PENDING,
-    paymentGateway: "PayPal",
-    gatewayTransactionId: "paypal_987654321",
-    relatedEntityId: "sub-2",
-    relatedEntityType: "UserSubscription",
-    metadata: { method: "paypal", ip: "127.0.0.2" },
-    processedAt: null,
-    createdAt: "2024-01-21T10:00:00Z",
-    updatedAt: "2024-01-21T10:00:00Z",
-  },
-  {
-    id: "3",
-    userId: "user-3",
-    user: { id: "user-3", name: "Le Van C" },
-    type: TransactionType.SUBSCRIPTION_PAYMENT,
-    description: "Monthly subscription fee for Premium Plan",
-    amount: 19.99,
-    currency: "USD",
-    status: TransactionStatus.FAILED,
-    paymentGateway: "MoMo",
-    gatewayTransactionId: "momo_123456789",
-    relatedEntityId: "sub-3",
-    relatedEntityType: "UserSubscription",
-    metadata: { method: "momo", ip: "127.0.0.3" },
-    processedAt: null,
-    createdAt: "2024-01-22T09:00:00Z",
-    updatedAt: "2024-01-22T09:00:00Z",
-  },
-];
 
 const statusOptions = [
   { label: "Pending", value: TransactionStatus.PENDING, color: "orange" },
@@ -114,22 +58,27 @@ const typeOptions = [
 ];
 
 export default function TransactionManagementScreen() {
-  const [transactions] = useState(mockTransactions);
   const [searchText, setSearchText] = useState("");
   const [selectedStatus, setSelectedStatus] = useState<string | undefined>();
   const [selectedType, setSelectedType] = useState<string | undefined>();
   const [selectedTransaction, setSelectedTransaction] = useState<any>(null);
   const [isDrawerVisible, setIsDrawerVisible] = useState(false);
-
-  const filteredTransactions = transactions.filter((tx) => {
-    const matchesSearch =
-      tx.user?.name?.toLowerCase().includes(searchText.toLowerCase()) ||
-      tx.description?.toLowerCase().includes(searchText.toLowerCase()) ||
-      tx.gatewayTransactionId?.toLowerCase().includes(searchText.toLowerCase());
-    const matchesStatus = !selectedStatus || tx.status === selectedStatus;
-    const matchesType = !selectedType || tx.type === selectedType;
-
-    return matchesSearch && matchesStatus && matchesType;
+  const {
+    data: transactions,
+    total,
+    isLoading,
+    isRefetching,
+    totalMoney,
+    totalSuccessful,
+    refetch,
+  } = useTransactionPagination({
+    skip: 0,
+    take: 10,
+    where: {
+      searchText: searchText.trim(),
+      status: selectedStatus,
+      type: selectedType,
+    },
   });
 
   const handleViewDetail = (record: any) => {
@@ -141,8 +90,10 @@ export default function TransactionManagementScreen() {
     {
       title: "User",
       dataIndex: "user",
-      key: "user",
-      render: (user: any) => user?.name || "-",
+      key: "__user__",
+      render: (user: any) => {
+        return user?.username || "-";
+      },
     },
     {
       title: "Type",
@@ -212,14 +163,9 @@ export default function TransactionManagementScreen() {
     },
   ];
 
-  const totalAmount = transactions.reduce(
-    (sum, tx) => sum + Number(tx.amount),
-    0,
-  );
-  const totalCount = transactions.length;
-  const successfulCount = transactions.filter(
-    (tx) => tx.status === TransactionStatus.SUCCESSFUL,
-  ).length;
+  useEffect(() => {
+    refetch();
+  }, []);
 
   return (
     <Layout className="min-h-screen">
@@ -237,11 +183,7 @@ export default function TransactionManagementScreen() {
         <Row className="mb-6" gutter={16}>
           <Col span={8}>
             <Card>
-              <Statistic
-                prefix="💸"
-                title="Total Transactions"
-                value={totalCount}
-              />
+              <Statistic prefix="💸" title="Total Transactions" value={total} />
             </Card>
           </Col>
           <Col span={8}>
@@ -249,7 +191,7 @@ export default function TransactionManagementScreen() {
               <Statistic
                 prefix="✅"
                 title="Successful"
-                value={successfulCount}
+                value={totalSuccessful}
                 valueStyle={{ color: "#3f8600" }}
               />
             </Card>
@@ -261,7 +203,7 @@ export default function TransactionManagementScreen() {
                 prefix="💰"
                 suffix="VND"
                 title="Total Amount"
-                value={totalAmount}
+                value={totalMoney}
                 valueStyle={{ color: "#1890ff" }}
               />
             </Card>
@@ -325,7 +267,8 @@ export default function TransactionManagementScreen() {
         <Card>
           <Table
             columns={columns}
-            dataSource={filteredTransactions}
+            dataSource={transactions}
+            loading={isLoading || isRefetching}
             pagination={{
               pageSize: 10,
               showSizeChanger: true,
@@ -362,7 +305,7 @@ export default function TransactionManagementScreen() {
                       <Tag
                         color={
                           statusOptions.find(
-                            (s) => s.value === selectedTransaction.status,
+                            (s) => s.value === selectedTransaction.status
                           )?.color
                         }
                         style={{
@@ -372,7 +315,7 @@ export default function TransactionManagementScreen() {
                         }}
                       >
                         {statusOptions.find(
-                          (s) => s.value === selectedTransaction.status,
+                          (s) => s.value === selectedTransaction.status
                         )?.label || selectedTransaction.status}
                       </Tag>
                     </div>
@@ -385,7 +328,7 @@ export default function TransactionManagementScreen() {
                     <Text strong>Type:</Text>
                     <div>
                       {typeOptions.find(
-                        (t) => t.value === selectedTransaction.type,
+                        (t) => t.value === selectedTransaction.type
                       )?.label || selectedTransaction.type}
                     </div>
                   </div>
@@ -435,7 +378,7 @@ export default function TransactionManagementScreen() {
                     <div>
                       {selectedTransaction.processedAt
                         ? new Date(
-                            selectedTransaction.processedAt,
+                            selectedTransaction.processedAt
                           ).toLocaleString("en-US")
                         : "-"}
                     </div>
@@ -447,7 +390,7 @@ export default function TransactionManagementScreen() {
                     <div>
                       {selectedTransaction.createdAt
                         ? new Date(
-                            selectedTransaction.createdAt,
+                            selectedTransaction.createdAt
                           ).toLocaleString("en-US")
                         : "-"}
                     </div>
@@ -461,7 +404,7 @@ export default function TransactionManagementScreen() {
                     <div>
                       {selectedTransaction.updatedAt
                         ? new Date(
-                            selectedTransaction.updatedAt,
+                            selectedTransaction.updatedAt
                           ).toLocaleString("en-US")
                         : "-"}
                     </div>

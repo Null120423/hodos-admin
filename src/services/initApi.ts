@@ -37,7 +37,7 @@ const initApi = (url?: string, headers = {}) => {
       console.log(
         "\x1b[31m",
         "ERROR REQUEST URL:",
-        error.config?.baseURL + "/" + error.config.url,
+        error.config?.baseURL + "/" + error.config.url
       );
       console.log("\x1b[31m", "ERROR REQUEST BODY:", error.config.data);
       console.log("=====>", error?.response?.data);
@@ -54,6 +54,7 @@ const initApi = (url?: string, headers = {}) => {
         }
         case 500: {
           message =
+            error?.response?.data?.message ||
             "We are currently undergoing maintenance to upgrade our system. Please try again in a few minutes!";
           break;
         }
@@ -70,7 +71,7 @@ const initApi = (url?: string, headers = {}) => {
       });
 
       return Promise.reject(error);
-    },
+    }
   );
 
   return api;

@@ -1,0 +1,65 @@
+// Mock data for receiving banks
+export const mockReceivingBanks = [
+  {
+    id: "1",
+    bankName: "Vietcombank",
+    bankCode: "VCB",
+    accountNumber: "0123456789",
+    accountHolderName: "Nguyen Van A",
+    branchName: "Hội sở chính Hà Nội",
+    currency: "VND",
+    isActive: true,
+    createdAt: "2024-01-15T10:30:00Z",
+    updatedAt: "2024-01-20T14:45:00Z",
+  },
+  {
+    id: "2",
+    bankName: "Techcombank",
+    bankCode: "TCB",
+    accountNumber: "9876543210",
+    accountHolderName: "Tran Thi B",
+    branchName: "Chi nhánh Quận 1",
+    currency: "USD",
+    isActive: true,
+    createdAt: "2024-01-16T09:15:00Z",
+    updatedAt: "2024-01-21T11:20:00Z",
+  },
+  {
+    id: "3",
+    bankName: "BIDV",
+    bankCode: "BIDV",
+    accountNumber: "1122334455",
+    accountHolderName: "Le Van C",
+    branchName: "Chi nhánh Cầu Giấy",
+    currency: "EUR",
+    isActive: false,
+    createdAt: "2024-01-17T14:30:00Z",
+    updatedAt: "2024-01-22T16:45:00Z",
+  },
+  {
+    id: "4",
+    bankName: "VietinBank",
+    bankCode: "VTB",
+    accountNumber: "5566778899",
+    accountHolderName: "Pham Thi D",
+    branchName: "Chi nhánh Đống Đa",
+    currency: "VND",
+    isActive: true,
+    createdAt: "2024-01-18T08:20:00Z",
+    updatedAt: "2024-01-23T10:15:00Z",
+  },
+];
+
+export const currencyOptions = [{ label: "VND", value: "VND", color: "blue" }];
+
+export const bankOptions = [
+  { label: "Vietcombank", value: "Vietcombank", code: "VCB" },
+  { label: "Techcombank", value: "Techcombank", code: "TCB" },
+  { label: "BIDV", value: "BIDV", code: "BIDV" },
+  { label: "VietinBank", value: "VietinBank", code: "VTB" },
+  { label: "ACB", value: "ACB", code: "ACB" },
+  { label: "Sacombank", value: "Sacombank", code: "STB" },
+  { label: "VPBank", value: "VPBank", code: "VPB" },
+  { label: "MBBank", value: "MBBank", code: "MBB" },
+  { label: "TPBank", value: "TpBank", code: "TPB" },
+];

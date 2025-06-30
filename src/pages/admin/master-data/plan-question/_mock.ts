@@ -1,0 +1,88 @@
+// Enums
+export enum PlanQuestionType {
+  SINGLE_CHOICE = "SINGLE_CHOICE",
+  MULTI_CHOICE = "MULTI_CHOICE",
+  DATE_RANGE = "DATE_RANGE",
+}
+export const mockPlanQuestions = [
+  {
+    id: "1",
+    question: "Who is going?",
+    type: PlanQuestionType.SINGLE_CHOICE,
+    order: 1,
+    isActive: true,
+    createdAt: "2024-01-15T10:30:00Z",
+    updatedAt: "2024-01-20T14:45:00Z",
+    options: [
+      {
+        id: "opt1",
+        label: "Only me",
+        desc: "Traveling alone",
+        icon: "🧍",
+        value: "only_me",
+        questionId: "1",
+      },
+      {
+        id: "opt2",
+        label: "Couple",
+        desc: "Traveling with partner",
+        icon: "👫",
+        value: "couple",
+        questionId: "1",
+      },
+      {
+        id: "opt3",
+        label: "Family",
+        desc: "Traveling with family",
+        icon: "👨‍👩‍👧‍👦",
+        value: "family",
+        questionId: "1",
+      },
+    ],
+  },
+  {
+    id: "2",
+    question: "What's your budget range?",
+    type: PlanQuestionType.SINGLE_CHOICE,
+    order: 2,
+    isActive: true,
+    createdAt: "2024-01-16T09:15:00Z",
+    updatedAt: "2024-01-21T11:20:00Z",
+    options: [
+      {
+        id: "opt4",
+        label: "Budget",
+        desc: "Under $500",
+        icon: "💰",
+        value: "budget",
+        questionId: "2",
+      },
+      {
+        id: "opt5",
+        label: "Mid-range",
+        desc: "$500 - $1500",
+        icon: "💳",
+        value: "mid_range",
+        questionId: "2",
+      },
+      {
+        id: "opt6",
+        label: "Luxury",
+        desc: "Above $1500",
+        icon: "💎",
+        value: "luxury",
+        questionId: "2",
+      },
+    ],
+  },
+  {
+    id: "3",
+    question: "When do you want to travel?",
+    type: PlanQuestionType.DATE_RANGE,
+    order: 3,
+    isActive: false,
+    createdAt: "2024-01-17T14:30:00Z",
+    updatedAt: "2024-01-22T16:45:00Z",
+    options: [],
+  },
+];

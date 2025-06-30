@@ -20,7 +20,7 @@ export default function BlogModal({
       readonly: false,
       placeholder: "Start typings...",
     }),
-    [],
+    []
   );
 
   return (
@@ -81,9 +81,7 @@ export default function BlogModal({
             config={config}
             value={content}
             onBlur={(newContent) => setContent(newContent)}
-            onChange={(newContent) => {
-              // This is just to trigger the onChange event, actual content is managed by onBlur
-            }}
+            onChange={() => {}}
           />
         </Form.Item>
 

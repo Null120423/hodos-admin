@@ -36,8 +36,8 @@ import PostModal from "./PostModal";
 import PostTable from "./PostTable";
 import { mockPosts } from "./_mock";
 
-const { Header, Content } = Layout;
-const { Title, Text } = Typography;
+const { Content } = Layout;
+const { Title } = Typography;
 const { TabPane } = Tabs;
 
 // Mock data for posts with moderation status
@@ -124,7 +124,7 @@ export default function PostManagementScreen() {
         name: `image-${index}.jpg`,
         status: "done",
         url: img,
-      })),
+      }))
     );
   };
 
@@ -171,7 +171,7 @@ export default function PostManagementScreen() {
                   harmfulScore > 0.5 ? "flagged" : post.moderationStatus,
                 updatedAt: new Date().toISOString(),
               }
-            : post,
+            : post
         );
 
         setPosts(updatedPosts);
@@ -214,7 +214,7 @@ export default function PostManagementScreen() {
 
         if (harmfulScore > 0.5) {
           message.warning(
-            "Bài viết được đánh dấu cần kiểm duyệt do phát hiện nội dung có thể gây hại!",
+            "Bài viết được đánh dấu cần kiểm duyệt do phát hiện nội dung có thể gây hại!"
           );
         }
       }
@@ -239,7 +239,7 @@ export default function PostManagementScreen() {
               moderatedAt: new Date().toISOString(),
               isPublished: values.moderationStatus === "approved",
             }
-          : post,
+          : post
       );
 
       setPosts(updatedPosts);
@@ -281,16 +281,16 @@ export default function PostManagementScreen() {
 
   const totalPosts = posts.length;
   const pendingPosts = posts.filter(
-    (p) => p.moderationStatus === "pending",
+    (p) => p.moderationStatus === "pending"
   ).length;
   const flaggedPosts = posts.filter(
-    (p) => p.moderationStatus === "flagged" || p.harmfulContentScore > 0.5,
+    (p) => p.moderationStatus === "flagged" || p.harmfulContentScore > 0.5
   ).length;
   const approvedPosts = posts.filter(
-    (p) => p.moderationStatus === "approved",
+    (p) => p.moderationStatus === "approved"
   ).length;
   const rejectedPosts = posts.filter(
-    (p) => p.moderationStatus === "rejected",
+    (p) => p.moderationStatus === "rejected"
   ).length;
 
   return (

@@ -9,12 +9,13 @@ const useBlogCreate = () => {
     mutationFn: (variables) => {
       return rootApi.post(endpoints.API.BLOG.CREATE, variables);
     },
-    onSuccess: (res) => {
+    onSuccess: () => {
       query.invalidateQueries({
         queryKey: [endpoints.API.BLOG.PAGINATION],
       });
     },
   });
+
   return {
     isLoading: isPending,
     isError,

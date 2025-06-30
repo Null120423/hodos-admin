@@ -77,7 +77,7 @@ export default function ReceivingBankManagementScreen() {
   const handleSubmitBank = async (values: any) => {
     if (editingBank) {
       if (values)
-        await onUpdate({ id: editingBank.id, ...values }).then((res) => {
+        await onUpdate({ id: editingBank.id, ...values }).then(() => {
           setIsBankModalVisible(false);
           bankForm.resetFields();
         });
@@ -103,7 +103,7 @@ export default function ReceivingBankManagementScreen() {
         updatedAt: new Date().toISOString(),
       };
 
-      await onCreate(newBank).then((res) => {
+      await onCreate(newBank).then(() => {
         setIsBankModalVisible(false);
         bankForm.resetFields();
       });

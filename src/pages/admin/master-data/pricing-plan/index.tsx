@@ -93,7 +93,7 @@ export default function PricingPlanManagementScreen() {
         ...values,
         features,
         id: editingPlan.id,
-      }).then((res) => {
+      }).then(() => {
         setIsPlanModalVisible(false);
         planForm.resetFields();
       });
@@ -116,7 +116,7 @@ export default function PricingPlanManagementScreen() {
         updatedAt: new Date().toISOString(),
       };
 
-      await onCreate(newPlan).then((res) => {
+      await onCreate(newPlan).then(() => {
         setIsPlanModalVisible(false);
         planForm.resetFields();
       });

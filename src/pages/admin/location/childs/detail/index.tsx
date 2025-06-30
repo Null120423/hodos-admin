@@ -9,7 +9,6 @@ import {
   Col,
   Descriptions,
   Image,
-  Layout,
   Row,
   Space,
   Spin,
@@ -22,7 +21,6 @@ import { useLocation } from "react-router-dom";
 
 import useLocationDetail from "@/services/hooks/admin/location/useLocationDetail";
 
-const { Content } = Layout;
 const { Title, Text, Paragraph } = Typography;
 const { TabPane } = Tabs;
 

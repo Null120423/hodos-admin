@@ -9,7 +9,7 @@ const useCreateMultiLocation = () => {
     mutationFn: (variables) => {
       return rootApi.post(endpoints.API.LOCATION.CREATE_MULTI, variables);
     },
-    onSuccess: (res) => {
+    onSuccess: () => {
       query.invalidateQueries({
         queryKey: [endpoints.API.LOCATION.PAGINATION],
       });
@@ -18,6 +18,7 @@ const useCreateMultiLocation = () => {
       });
     },
   });
+
   return {
     isLoading: isPending,
     isError,

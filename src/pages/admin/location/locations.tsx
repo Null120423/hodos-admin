@@ -52,7 +52,7 @@ function Locations() {
     }));
   };
 
-  const handlePageSizeChange = (size: number, val: number) => {
+  const handlePageSizeChange = (size: number) => {
     setWhere((prev) => ({
       ...prev,
       pageSize: size,
@@ -251,7 +251,7 @@ function Locations() {
           <Select
             style={{ width: 120 }}
             value={where.pageSize}
-            onChange={(val) => handlePageSizeChange(1, val)}
+            onChange={(val) => handlePageSizeChange(val)}
           >
             <Option value={5}>5</Option>
             <Option value={10}>10</Option>

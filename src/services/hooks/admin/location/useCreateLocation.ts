@@ -10,7 +10,7 @@ const useCreateLocation = () => {
     mutationFn: (variables) => {
       return rootApi.post(endpoints.API.LOCATION.CREATE, variables);
     },
-    onSuccess: (res) => {
+    onSuccess: () => {
       query.invalidateQueries({
         queryKey: [endpoints.API.LOCATION.PAGINATION],
       });
@@ -19,6 +19,7 @@ const useCreateLocation = () => {
       });
     },
   });
+
   return {
     isLoading: isPending,
     isError,

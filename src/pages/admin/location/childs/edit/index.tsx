@@ -39,7 +39,7 @@ import { useLocation } from "react-router-dom";
 
 import useLocationDetail from "@/services/hooks/admin/location/useLocationDetail";
 
-const { Header, Content } = Layout;
+const { Content } = Layout;
 const { Title } = Typography;
 const { TextArea } = Input;
 const { Option } = Select;
@@ -71,11 +71,6 @@ export default function EditLocationScreen() {
   const [transportations, setTransportations] = useState(
     locationData?.detail?.transportations
   );
-  const [highlightModalVisible, setHighlightModalVisible] = useState(false);
-  const [activityModalVisible, setActivityModalVisible] = useState(false);
-  const [attractionModalVisible, setAttractionModalVisible] = useState(false);
-  const [transportModalVisible, setTransportModalVisible] = useState(false);
-  const [editingItem, setEditingItem] = useState<any>(null);
 
   const steps = [
     {
@@ -105,7 +100,8 @@ export default function EditLocationScreen() {
       setSaving(true);
       const values = await form.validateFields();
 
-      console.log("Saving location data:", values);
+      console.log("Form values:", values);
+
       message.success("Location updated successfully!");
       // Here you would typically make an API call to save the data
     } catch (error) {
@@ -124,54 +120,6 @@ export default function EditLocationScreen() {
     fileList: newFileList,
   }) => {
     setFileList(newFileList);
-  };
-
-  const addHighlight = (item: any) => {
-    if (editingItem) {
-      setHighlights(
-        highlights.map((h, i) => (i === editingItem.index ? item : h))
-      );
-    } else {
-      setHighlights([...highlights, item]);
-    }
-    setHighlightModalVisible(false);
-    setEditingItem(null);
-  };
-
-  const addActivity = (item: any) => {
-    if (editingItem) {
-      setActivities(
-        activities.map((a, i) => (i === editingItem.index ? item : a))
-      );
-    } else {
-      setActivities([...activities, item]);
-    }
-    setActivityModalVisible(false);
-    setEditingItem(null);
-  };
-
-  const addAttraction = (item: any) => {
-    if (editingItem) {
-      setNearbyAttractions(
-        nearbyAttractions.map((a, i) => (i === editingItem.index ? item : a))
-      );
-    } else {
-      setNearbyAttractions([...nearbyAttractions, item]);
-    }
-    setAttractionModalVisible(false);
-    setEditingItem(null);
-  };
-
-  const addTransport = (item: any) => {
-    if (editingItem) {
-      setTransportations(
-        transportations.map((t, i) => (i === editingItem.index ? item : t))
-      );
-    } else {
-      setTransportations([...transportations, item]);
-    }
-    setTransportModalVisible(false);
-    setEditingItem(null);
   };
 
   const renderStepContent = () => {
@@ -319,11 +267,7 @@ export default function EditLocationScreen() {
           <div className="space-y-6">
             <Card
               extra={
-                <Button
-                  icon={<PlusOutlined />}
-                  type="primary"
-                  onClick={() => setHighlightModalVisible(true)}
-                >
+                <Button icon={<PlusOutlined />} type="primary">
                   Add Highlight
                 </Button>
               }
@@ -331,7 +275,7 @@ export default function EditLocationScreen() {
             >
               <List
                 dataSource={highlights}
-                renderItem={(item, index) => (
+                renderItem={(item: any, index) => (
                   <List.Item key={index}>
                     <List.Item.Meta
                       avatar={<Avatar>{item.icon}</Avatar>}
@@ -343,16 +287,15 @@ export default function EditLocationScreen() {
                         <Button
                           icon={<EditOutlined />}
                           type="link"
-                          onClick={() => {
-                            setEditingItem({ ...item, index });
-                            setHighlightModalVisible(true);
-                          }}
+                          onClick={() => {}}
                         />,
                         <Popconfirm
                           title="Delete this highlight?"
                           onConfirm={() =>
                             setHighlights(
-                              highlights.filter((_, i) => i !== index)
+                              highlights.filter(
+                                (_: any, i: number) => i !== index
+                              )
                             )
                           }
                         >
@@ -371,11 +314,7 @@ export default function EditLocationScreen() {
 
             <Card
               extra={
-                <Button
-                  icon={<PlusOutlined />}
-                  type="primary"
-                  onClick={() => setActivityModalVisible(true)}
-                >
+                <Button icon={<PlusOutlined />} type="primary">
                   Add Activity
                 </Button>
               }
@@ -383,7 +322,7 @@ export default function EditLocationScreen() {
             >
               <List
                 dataSource={activities}
-                renderItem={(item, index) => (
+                renderItem={(item: any, index: number) => (
                   <List.Item key={index}>
                     <List.Item.Meta
                       avatar={<Avatar>{item.icon}</Avatar>}
@@ -395,16 +334,15 @@ export default function EditLocationScreen() {
                         <Button
                           icon={<EditOutlined />}
                           type="link"
-                          onClick={() => {
-                            setEditingItem({ ...item, index });
-                            setActivityModalVisible(true);
-                          }}
+                          onClick={() => {}}
                         />,
                         <Popconfirm
                           title="Delete this activity?"
                           onConfirm={() =>
                             setActivities(
-                              activities.filter((_, i) => i !== index)
+                              activities.filter(
+                                (_: any, i: number) => i !== index
+                              )
                             )
                           }
                         >
@@ -428,11 +366,7 @@ export default function EditLocationScreen() {
           <div className="space-y-6">
             <Card
               extra={
-                <Button
-                  icon={<PlusOutlined />}
-                  type="primary"
-                  onClick={() => setAttractionModalVisible(true)}
-                >
+                <Button icon={<PlusOutlined />} type="primary">
                   Add Attraction
                 </Button>
               }
@@ -440,7 +374,7 @@ export default function EditLocationScreen() {
             >
               <List
                 dataSource={nearbyAttractions}
-                renderItem={(item, index) => (
+                renderItem={(item: any, index: number) => (
                   <List.Item key={index}>
                     <List.Item.Meta
                       description={item.description}
@@ -456,16 +390,15 @@ export default function EditLocationScreen() {
                         <Button
                           icon={<EditOutlined />}
                           type="link"
-                          onClick={() => {
-                            setEditingItem({ ...item, index });
-                            setAttractionModalVisible(true);
-                          }}
+                          onClick={() => {}}
                         />,
                         <Popconfirm
                           title="Delete this attraction?"
                           onConfirm={() =>
                             setNearbyAttractions(
-                              nearbyAttractions.filter((_, i) => i !== index)
+                              nearbyAttractions.filter(
+                                (_: any, i: number) => i !== index
+                              )
                             )
                           }
                         >
@@ -484,11 +417,7 @@ export default function EditLocationScreen() {
 
             <Card
               extra={
-                <Button
-                  icon={<PlusOutlined />}
-                  type="primary"
-                  onClick={() => setTransportModalVisible(true)}
-                >
+                <Button icon={<PlusOutlined />} type="primary">
                   Add Transport
                 </Button>
               }
@@ -496,7 +425,7 @@ export default function EditLocationScreen() {
             >
               <List
                 dataSource={transportations}
-                renderItem={(item, index) => (
+                renderItem={(item: any, index: number) => (
                   <List.Item key={index}>
                     <List.Item.Meta
                       avatar={<Avatar>{item.icon}</Avatar>}
@@ -508,16 +437,15 @@ export default function EditLocationScreen() {
                         <Button
                           icon={<EditOutlined />}
                           type="link"
-                          onClick={() => {
-                            setEditingItem({ ...item, index });
-                            setTransportModalVisible(true);
-                          }}
+                          onClick={() => {}}
                         />,
                         <Popconfirm
                           title="Delete this transport option?"
                           onConfirm={() =>
                             setTransportations(
-                              transportations.filter((_, i) => i !== index)
+                              transportations.filter(
+                                (_: any, i: number) => i !== index
+                              )
                             )
                           }
                         >

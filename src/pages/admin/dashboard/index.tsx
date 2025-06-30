@@ -31,7 +31,7 @@ import {
 } from "antd";
 import { useState } from "react";
 
-const { Header, Content, Sider } = Layout;
+const { Header, Content } = Layout;
 const { Title, Text } = Typography;
 const { TabPane } = Tabs;
 const { RangePicker } = DatePicker;

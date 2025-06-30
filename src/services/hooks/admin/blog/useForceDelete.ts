@@ -9,12 +9,13 @@ const useForceDelete = () => {
     mutationFn: (id) => {
       return rootApi.delete(endpoints.API.BLOG.FORCE_DELETE + "/" + id);
     },
-    onSuccess: (res) => {
+    onSuccess: () => {
       query.invalidateQueries({
         queryKey: [endpoints.API.BLOG.PAGINATION],
       });
     },
   });
+
   return {
     isLoading: isPending,
     isError,

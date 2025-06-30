@@ -9,7 +9,7 @@ const useUpdateLocation = () => {
     mutationFn: (variables) => {
       return rootApi.put(endpoints.API.LOCATION.UPDATE, variables);
     },
-    onSuccess: (res) => {
+    onSuccess: () => {
       query.invalidateQueries({
         queryKey: [endpoints.API.LOCATION.PAGINATION],
       });

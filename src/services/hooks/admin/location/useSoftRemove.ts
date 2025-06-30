@@ -10,7 +10,7 @@ const useSoftRemoveLocation = () => {
         endpoints.API.LOCATION.REMOVE_SOFT + "/" + variables.id
       );
     },
-    onSuccess: (res) => {
+    onSuccess: () => {
       query.invalidateQueries({
         queryKey: [endpoints.API.LOCATION.PAGINATION],
       });
@@ -19,6 +19,7 @@ const useSoftRemoveLocation = () => {
       });
     },
   });
+
   return {
     isLoading: isPending,
     isError,
@@ -27,4 +28,5 @@ const useSoftRemoveLocation = () => {
     onRemove: mutateAsync,
   };
 };
+
 export default useSoftRemoveLocation;

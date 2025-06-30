@@ -142,7 +142,7 @@ export default function BlogAdminScreen() {
               url: blog.thumbnail,
             },
           ]
-        : [],
+        : []
     );
   };
 
@@ -170,7 +170,7 @@ export default function BlogAdminScreen() {
                 thumbnail: thumbnailUrl,
                 updatedAt: new Date().toISOString(),
               }
-            : blog,
+            : blog
         );
 
         setBlogs(updatedBlogs);
@@ -214,12 +214,12 @@ export default function BlogAdminScreen() {
             status: b.status === "published" ? "draft" : "published",
             updatedAt: new Date().toISOString(),
           }
-        : b,
+        : b
     );
 
     setBlogs(updatedBlogs);
     message.success(
-      `${blog.status === "published" ? "Ẩn" : "Xuất bản"} bài viết thành công!`,
+      `${blog.status === "published" ? "Ẩn" : "Xuất bản"} bài viết thành công!`
     );
   };
 
@@ -234,9 +234,8 @@ export default function BlogAdminScreen() {
   });
 
   const totalViews = blogs.reduce((sum, blog) => sum + blog.views, 0);
-  const totalLikes = blogs.reduce((sum, blog) => sum + blog.likes, 0);
   const publishedCount = blogs.filter(
-    (blog) => blog.status === "published",
+    (blog) => blog.status === "published"
   ).length;
   const draftCount = blogs.filter((blog) => blog.status === "draft").length;
 

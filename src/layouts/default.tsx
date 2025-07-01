@@ -6,6 +6,7 @@ import {
   DatabaseFilled,
   EnvironmentOutlined,
   FileOutlined,
+  NotificationOutlined,
   SettingOutlined,
   TransactionOutlined,
   UserOutlined,
@@ -25,7 +26,7 @@ function getItem(
   label: React.ReactNode,
   key: React.Key,
   icon?: React.ReactNode,
-  children?: MenuItem[],
+  children?: MenuItem[]
 ): MenuItem {
   return {
     key,
@@ -40,7 +41,7 @@ const menuItems: MenuItem[] = [
   getItem(
     "Location Manager",
     ADMIN_ROUTES.LOCATION_MANAGER,
-    <EnvironmentOutlined />,
+    <EnvironmentOutlined />
   ),
   getItem("Blog Manager", ADMIN_ROUTES.BLOG_MANAGER, <FileOutlined />),
   getItem("User Manager", "users", <UserOutlined />, [
@@ -55,9 +56,12 @@ const menuItems: MenuItem[] = [
   getItem(
     "Transactions",
     ADMIN_ROUTES.TRANSACTION_LIST,
-    <TransactionOutlined />,
+    <TransactionOutlined />
   ),
-
+  getItem("Notifications/Schedule", "data", <NotificationOutlined />, [
+    getItem("Schedule List", ADMIN_ROUTES.NOTIFICATION_SCHEDULE_LIST),
+    getItem("Notification", ADMIN_ROUTES.NOTIFICATION_LIST),
+  ]),
   getItem("System Logs", "logs", <CodeOutlined />, [
     getItem("Build Logs", ADMIN_ROUTES.BUILD_LOGS),
     getItem("Error Logs", ADMIN_ROUTES.ERROR_LOGS),

@@ -34,6 +34,11 @@ export const ADMIN_ROUTES = {
   TRANSACTION_LIST: "/transaction-list",
   TRANSACTION_DETAIL: "/transaction-detail",
   //#endregion
+
+  //#region  notifications
+  NOTIFICATION_LIST: "/notification-list",
+  NOTIFICATION_SCHEDULE_LIST: "/notification-schedule-list",
+  //#endregion
 };
 
 export const AUTH_ROUTES = {

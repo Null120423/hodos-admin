@@ -14,22 +14,22 @@ export const LoginPage = lazy(() => import("../pages/auth/sign-in"));
 
 // #region admin
 export const DashboardPage = lazy(
-  () => import("../pages/admin/dashboard/index"),
+  () => import("../pages/admin/dashboard/index")
 );
 //#region location
 export const LocationManagerPage = lazy(
-  () => import("../pages/admin/location/index"),
+  () => import("../pages/admin/location/index")
 );
 export const DetailLocationPage = lazy(
-  () => import("../pages/admin/location/childs/detail/index"),
+  () => import("../pages/admin/location/childs/detail/index")
 );
 export const EditLocationPage = lazy(
-  () => import("../pages/admin/location/childs/edit/index"),
+  () => import("../pages/admin/location/childs/edit/index")
 );
 //#endregion
 export const SettingPage = lazy(() => import("../pages/admin/index"));
 export const BlogManagerPage = lazy(
-  () => import("../pages/admin/blog-system/index"),
+  () => import("../pages/admin/blog-system/index")
 );
 export const BlogManagerCreatePage = lazy(() => import("../pages/admin/index"));
 export const BuildLogPage = lazy(() => import("../pages/admin/index"));
@@ -39,28 +39,37 @@ export const ErrorLogPage = lazy(() => import("../pages/admin/index"));
 
 //#region users
 export const UserListPage = lazy(
-  () => import("../pages/admin/users/list/index"),
+  () => import("../pages/admin/users/list/index")
 );
 export const UserPostPage = lazy(
-  () => import("../pages/admin/users/post/index"),
+  () => import("../pages/admin/users/post/index")
 );
 //#endregion
 
 //#region master data
 export const ReceivingBankAccountPage = lazy(
-  () => import("../pages/admin/master-data/receving-bank/index"),
+  () => import("../pages/admin/master-data/receving-bank/index")
 );
 export const PlanQuestionPage = lazy(
-  () => import("../pages/admin/master-data/plan-question/index"),
+  () => import("../pages/admin/master-data/plan-question/index")
 );
 export const PricingPlanPage = lazy(
-  () => import("../pages/admin/master-data/pricing-plan/index"),
+  () => import("../pages/admin/master-data/pricing-plan/index")
 );
 //#endregion
 
 //#region  transactions
 export const TransactionListPage = lazy(
-  () => import("../pages/admin/transactions/index"),
+  () => import("../pages/admin/transactions/index")
+);
+//#endregion
+
+//#region  notifications
+export const NotificationListPage = lazy(
+  () => import("../pages/admin/notifications/list/index")
+);
+export const NotificationScheduleListPage = lazy(
+  () => import("../pages/admin/notifications/schedule/list.tsx")
 );
 //#endregion
 
@@ -142,6 +151,17 @@ const AdminRoute = [
       {
         path: ADMIN_ROUTES.TRANSACTION_LIST,
         element: <TransactionListPage />,
+      },
+      //#endregion
+
+      //#region  notifications
+      {
+        path: ADMIN_ROUTES.NOTIFICATION_LIST,
+        element: <NotificationListPage />,
+      },
+      {
+        path: ADMIN_ROUTES.NOTIFICATION_SCHEDULE_LIST,
+        element: <NotificationScheduleListPage />,
       },
       //#endregion
     ],

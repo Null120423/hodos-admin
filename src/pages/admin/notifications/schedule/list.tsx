@@ -391,7 +391,13 @@ const ScheduledNotificationsList = () => {
             className="w-full"
             placeholder={["Start date", "End date"]}
             value={dateRange}
-            // onChange={setDateRange}
+            onChange={(val) => {
+              if (val && val[0] && val[1]) {
+                setDateRange([val[0], val[1]]);
+              } else {
+                setDateRange(null);
+              }
+            }}
           />
         </div>
 

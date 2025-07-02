@@ -1,6 +1,5 @@
-import type { UploadFile, UploadProps } from "antd";
+"use client";
 
-import { addToast } from "@heroui/react";
 import {
   Button,
   Card,
@@ -8,7 +7,6 @@ import {
   Form,
   Input,
   Layout,
-  message,
   Row,
   Select,
   Space,
@@ -16,44 +14,61 @@ import {
   Tag,
   Typography,
 } from "antd";
-import dayjs from "dayjs";
 import {
   CheckCircle2,
+  CreditCard,
   Crown,
   FileUp,
   Filter,
   Plus,
   Search,
-  User as UserIcon,
+  UserIcon,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import UserDetailDrawer from "./UserDetailDrawer";
 import UserModal from "./UserModal";
 import UserTable from "./UserTable";
-import { mockUsers } from "./_mock";
+
+import useUserPagination from "@/services/hooks/admin/user/userPaginnation";
 
 const { Content } = Layout;
 const { Title } = Typography;
 
 export default function UserManagementScreen() {
-  const [users, setUsers] = useState(mockUsers);
   const [isUserModalVisible, setIsUserModalVisible] = useState(false);
   const [isUserDetailVisible, setIsUserDetailVisible] = useState(false);
   const [editingUser, setEditingUser] = useState<any>(null);
   const [selectedUser, setSelectedUser] = useState<any>(null);
   const [userForm] = Form.useForm();
-  const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [searchText, setSearchText] = useState("");
   const [selectedRole, setSelectedRole] = useState<string | undefined>();
   const [selectedStatus, setSelectedStatus] = useState<string | undefined>();
+
+  const {
+    data: users,
+    refetch,
+    totalActiveUser,
+    totalAdminUser,
+    totalUser,
+    totalPremium,
+    isLoading,
+    isRefetching,
+  } = useUserPagination({
+    skip: 0,
+    take: 10,
+    where: {
+      searchText,
+      isAdmin: selectedRole === "admin",
+      status: selectedStatus,
+    },
+  });
 
   // User Management Functions
   const handleCreateUser = () => {
     setEditingUser(null);
     setIsUserModalVisible(true);
     userForm.resetFields();
-    setFileList([]);
   };
 
   const handleEditUser = (user: any) => {
@@ -62,38 +77,13 @@ export default function UserManagementScreen() {
     userForm.setFieldsValue({
       username: user.username,
       email: user.email,
-      isAdmin: user.isAdmin === "true",
+      isAdmin: user.isAdmin === true,
       isActive: user.isActive,
-      fullName: user.userDetail?.fullName,
-      address: user.userDetail?.address,
-      phoneNumber: user.userDetail?.phoneNumber,
-      bio: user.userDetail?.bio,
-      birthDate: user.userDetail?.birthDate
-        ? dayjs(user.userDetail.birthDate)
-        : null,
-      gender: user.userDetail?.gender,
-      nationality: user.userDetail?.nationality,
-      travelInterests: user.userDetail?.travelInterests,
-      languages: user.userDetail?.languages,
+      isUpdateDetail: user.isUpdateDetail,
     });
-    setFileList(
-      user.avatar
-        ? [
-            {
-              uid: "-1",
-              name: "avatar.jpg",
-              status: "done",
-              url: user.avatar,
-            },
-          ]
-        : []
-    );
   };
 
-  const handleDeleteUser = (id: string) => {
-    setUsers(users.filter((user) => user.id !== id));
-    message.success("Xóa người dùng thành công!");
-  };
+  const handleDeleteUser = (id: string) => {};
 
   const handleViewUserDetail = (user: any) => {
     setSelectedUser(user);
@@ -101,140 +91,63 @@ export default function UserManagementScreen() {
   };
 
   const handleToggleUserStatus = (user: any) => {
-    const updatedUsers = users.map((u) =>
-      u.id === user.id
-        ? {
-            ...u,
-            isActive: !u.isActive,
-            updatedAt: new Date().toISOString(),
-          }
-        : u
-    );
-
-    setUsers(updatedUsers);
-    message.success(
-      `${user.isActive ? "Vô hiệu hóa" : "Kích hoạt"} người dùng thành công!`
-    );
+    console.log("Toggling status for user:", user);
   };
 
   const handleSubmitUser = async (values: any) => {
-    try {
-      const avatarUrl = fileList[0]?.url || fileList[0]?.response?.url || "";
-
-      if (editingUser) {
-        // Update existing user
-        const updatedUsers = users.map((user) =>
-          user.id === editingUser.id
-            ? {
-                ...user,
-                username: values.username,
-                email: values.email,
-                avatar: avatarUrl,
-                isAdmin: values.isAdmin ? "true" : "false",
-                isActive: values.isActive,
-                updatedAt: new Date().toISOString(),
-                userDetail: {
-                  ...user.userDetail,
-                  fullName: values.fullName,
-                  address: values.address,
-                  phoneNumber: values.phoneNumber,
-                  email: values.email,
-                  bio: values.bio,
-                  birthDate: values.birthDate
-                    ? values.birthDate.format("YYYY-MM-DD")
-                    : null,
-                  gender: values.gender,
-                  nationality: values.nationality,
-                  travelInterests: values.travelInterests,
-                  languages: values.languages,
-                },
-              }
-            : user
-        );
-
-        setUsers(updatedUsers);
-        message.success("Cập nhật người dùng thành công!");
-      } else {
-        // Create new user
-        const newUser = {
-          id: Date.now().toString(),
-          username: values.username,
-          email: values.email,
-          avatar: avatarUrl,
-          verifyAt: new Date().toISOString(),
-          isAdmin: values.isAdmin ? "true" : "false",
-          isActive: values.isActive,
-          isUpdateDetail: true,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-          userDetail: {
-            fullName: values.fullName ?? "",
-            address: values.address ?? "",
-            phoneNumber: values.phoneNumber ?? "",
-            email: values.email ?? "",
-            bio: values.bio ?? "",
-            profilePictureUrl:
-              avatarUrl ||
-              "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face",
-            birthDate: values.birthDate
-              ? values.birthDate.format("YYYY-MM-DD")
-              : "",
-            gender: values.gender ?? "",
-            nationality: values.nationality ?? "",
-            travelInterests: values.travelInterests ?? "",
-            languages: values.languages ?? "",
-            reputationScore: 0,
-          },
-          posts: [],
-          totalPosts: 0,
-          totalLikes: 0,
-          totalComments: 0,
-        };
-
-        setUsers([newUser, ...users]);
-        addToast({
-          title: "Success",
-          description: "Create User Successful",
-          color: "success",
-        });
-      }
-
-      setIsUserModalVisible(false);
-      userForm.resetFields();
-      setFileList([]);
-    } catch (error) {
-      message.error("Có lỗi xảy ra!");
-    }
+    console.log("Submitted values:", values);
+    // try {
+    //   if (editingUser) {
+    //     // Update existing user
+    //     const updatedUsers = users.map((user) =>
+    //       user.id === editingUser.id
+    //         ? {
+    //             ...user,
+    //             username: values.username,
+    //             email: values.email,
+    //             isAdmin: values.isAdmin,
+    //             isActive: values.isActive,
+    //             isUpdateDetail: values.isUpdateDetail,
+    //             updatedAt: new Date().toISOString(),
+    //           }
+    //         : user
+    //     );
+    //     setUsers(updatedUsers);
+    //     message.success("User updated successfully!");
+    //   } else {
+    //     // Create new user
+    //     const newUser = {
+    //       id: Date.now().toString(),
+    //       username: values.username,
+    //       email: values.email,
+    //       avatar:
+    //         "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg",
+    //       verifyAt: new Date().toISOString(),
+    //       isAdmin: values.isAdmin,
+    //       isActive: values.isActive,
+    //       isUpdateDetail: values.isUpdateDetail || false,
+    //       createdAt: new Date().toISOString(),
+    //       updatedAt: new Date().toISOString(),
+    //       userSubscriptionInfo: {
+    //         isPremium: false,
+    //         isAutoRenew: false,
+    //         subscriptionStatus: "inactive",
+    //       },
+    //       userSubscription: null,
+    //     };
+    //     setUsers([newUser, ...users]);
+    //     message.success("User created successfully!");
+    //   }
+    //   setIsUserModalVisible(false);
+    //   userForm.resetFields();
+    // } catch (error) {
+    //   message.error("An error occurred!");
+    // }
   };
 
-  const handleUploadChange: UploadProps["onChange"] = ({
-    fileList: newFileList,
-  }) => {
-    setFileList(newFileList);
-  };
-
-  const filteredUsers = users.filter((user) => {
-    const matchesSearch =
-      user.username.toLowerCase().includes(searchText.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchText.toLowerCase()) ||
-      user.userDetail?.fullName
-        ?.toLowerCase()
-        .includes(searchText.toLowerCase());
-    const matchesRole =
-      !selectedRole ||
-      (selectedRole === "admin"
-        ? user.isAdmin === "true"
-        : user.isAdmin === "false");
-    const matchesStatus =
-      !selectedStatus ||
-      (selectedStatus === "active" ? user.isActive : !user.isActive);
-
-    return matchesSearch && matchesRole && matchesStatus;
-  });
-
-  const totalUsers = users.length;
-  const activeUsers = users.filter((u) => u.isActive).length;
-  const adminUsers = users.filter((u) => u.isAdmin === "true").length;
+  useEffect(() => {
+    refetch();
+  }, [searchText, selectedRole, selectedStatus, ,]);
 
   return (
     <Layout>
@@ -257,32 +170,42 @@ export default function UserManagementScreen() {
       <Content>
         {/* Statistics */}
         <Row className="mb-6" gutter={16}>
-          <Col span={8}>
+          <Col span={6}>
             <Card>
               <Statistic
                 prefix={<UserIcon size={16} />}
                 title="Total Users"
-                value={totalUsers}
+                value={totalUser}
               />
             </Card>
           </Col>
-          <Col span={8}>
+          <Col span={6}>
             <Card>
               <Statistic
                 prefix={<CheckCircle2 color="#3f8600" size={16} />}
                 title="Active Users"
-                value={activeUsers}
+                value={totalActiveUser}
                 valueStyle={{ color: "#3f8600" }}
               />
             </Card>
           </Col>
-          <Col span={8}>
+          <Col span={6}>
             <Card>
               <Statistic
                 prefix={<Crown color="#cf1322" size={16} />}
                 title="Admins"
-                value={adminUsers}
+                value={totalAdminUser}
                 valueStyle={{ color: "#cf1322" }}
+              />
+            </Card>
+          </Col>
+          <Col span={6}>
+            <Card>
+              <Statistic
+                prefix={<CreditCard color="#1890ff" size={16} />}
+                title="Premium Users"
+                value={totalPremium}
+                valueStyle={{ color: "#1890ff" }}
               />
             </Card>
           </Col>
@@ -291,7 +214,7 @@ export default function UserManagementScreen() {
         {/* User Filters */}
         <Card className="mb-6">
           <Row gutter={16}>
-            <Col span={8}>
+            <Col span={6}>
               <Input
                 allowClear
                 placeholder="Search users..."
@@ -300,7 +223,7 @@ export default function UserManagementScreen() {
                 onChange={(e) => setSearchText(e.target.value)}
               />
             </Col>
-            <Col span={6}>
+            <Col span={4}>
               <Select
                 allowClear
                 placeholder="Filter by role"
@@ -316,7 +239,7 @@ export default function UserManagementScreen() {
                 </Select.Option>
               </Select>
             </Col>
-            <Col span={6}>
+            <Col span={4}>
               <Select
                 allowClear
                 placeholder="Filter by status"
@@ -332,7 +255,7 @@ export default function UserManagementScreen() {
                 </Select.Option>
               </Select>
             </Col>
-            <Col span={4}>
+            <Col span={6}>
               <Button
                 icon={<Filter size={16} />}
                 onClick={() => {
@@ -350,7 +273,8 @@ export default function UserManagementScreen() {
         {/* Users Table */}
         <Card>
           <UserTable
-            users={filteredUsers}
+            isLoading={isLoading || isRefetching}
+            users={users}
             onDelete={handleDeleteUser}
             onEdit={handleEditUser}
             onToggleStatus={handleToggleUserStatus}
@@ -361,12 +285,10 @@ export default function UserManagementScreen() {
         {/* User Create/Edit Modal */}
         <UserModal
           editingUser={editingUser}
-          fileList={fileList}
           userForm={userForm}
           visible={isUserModalVisible}
           onCancel={() => setIsUserModalVisible(false)}
           onFinish={handleSubmitUser}
-          onUploadChange={handleUploadChange}
         />
 
         {/* User Detail Drawer */}

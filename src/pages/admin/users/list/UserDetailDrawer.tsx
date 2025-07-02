@@ -1,17 +1,26 @@
 import { Avatar, Card, Col, Divider, Drawer, Row, Tag, Typography } from "antd";
-import { Star, User as UserIcon } from "lucide-react";
+import { Star, UserIcon, CreditCard, Calendar, Shield } from "lucide-react";
 
 const { Title, Text } = Typography;
 
-const tagOptions = [
-  { label: "Food", value: "Ẩm thực", color: "red" },
-  { label: "Travel", value: "Du lịch", color: "blue" },
-  { label: "Culture", value: "Văn hóa", color: "purple" },
-  { label: "History", value: "Lịch sử", color: "orange" },
-  { label: "Photography", value: "Nhiếp ảnh", color: "green" },
-];
-
 export default function UserDetailDrawer({ visible, user, onClose }: any) {
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
+  const formatPrice = (price: string, currency: string) => {
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: currency === "VND" ? "VND" : "USD",
+    }).format(parseFloat(price));
+  };
+
   return (
     <Drawer
       open={visible}
@@ -26,149 +35,218 @@ export default function UserDetailDrawer({ visible, user, onClose }: any) {
             <Avatar
               icon={<UserIcon size={40} />}
               size={100}
-              src={user.userDetail?.profilePictureUrl || user.avatar}
+              src={user.avatar}
             />
             <Title className="mt-3 mb-1" level={3}>
-              {user.userDetail?.fullName || user.username}
+              {user.username}
             </Title>
-            <Text type="secondary">@{user.username}</Text>
+            <Text type="secondary">{user.email}</Text>
             <div className="mt-2">
-              {user.isAdmin === "true" && <Tag color="red">Admin</Tag>}
+              {user.isAdmin && <Tag color="red">Admin</Tag>}
               <Tag color={user.isActive ? "green" : "red"}>
                 {user.isActive ? "Active" : "Inactive"}
               </Tag>
+              {user.userSubscriptionInfo?.isPremium && (
+                <Tag color="gold">Premium</Tag>
+              )}
             </div>
           </div>
 
-          <Divider>Basic Info</Divider>
+          <Divider>Account Information</Divider>
           <Row className="mb-4" gutter={16}>
             <Col span={12}>
+              <div className="mb-3">
+                <Text strong>User ID:</Text>
+                <div className="text-xs font-mono">{user.id}</div>
+              </div>
+              <div className="mb-3">
+                <Text strong>Username:</Text>
+                <div>{user.username}</div>
+              </div>
               <div className="mb-3">
                 <Text strong>Email:</Text>
                 <div>{user.email}</div>
               </div>
-              <div className="mb-3">
-                <Text strong>Phone Number:</Text>
-                <div>{user.userDetail?.phoneNumber || "Not updated"}</div>
-              </div>
             </Col>
             <Col span={12}>
               <div className="mb-3">
-                <Text strong>Birth Date:</Text>
+                <Text strong>Account Status:</Text>
                 <div>
-                  {user.userDetail?.birthDate
-                    ? new Date(user.userDetail.birthDate).toLocaleDateString(
-                        "en-US"
-                      )
-                    : "Not updated"}
+                  <Tag color={user.isActive ? "green" : "red"}>
+                    {user.isActive ? "Active" : "Inactive"}
+                  </Tag>
                 </div>
               </div>
               <div className="mb-3">
-                <Text strong>Gender:</Text>
-                <div>{user.userDetail?.gender || "Not updated"}</div>
+                <Text strong>Profile Updated:</Text>
+                <div>
+                  <Tag color={user.isUpdateDetail ? "green" : "orange"}>
+                    {user.isUpdateDetail ? "Complete" : "Incomplete"}
+                  </Tag>
+                </div>
               </div>
-            </Col>
-          </Row>
-
-          <div className="mb-4">
-            <Text strong>Address:</Text>
-            <div>{user.userDetail?.address || "Not updated"}</div>
-          </div>
-
-          <div className="mb-4">
-            <Text strong>Bio:</Text>
-            <div>{user.userDetail?.bio || "Not updated"}</div>
-          </div>
-
-          <Divider>Travel Info</Divider>
-          <Row className="mb-4" gutter={16}>
-            <Col span={12}>
               <div className="mb-3">
-                <Text strong>Interests:</Text>
-                <div>{user.userDetail?.travelInterests || "Not updated"}</div>
-              </div>
-            </Col>
-            <Col span={12}>
-              <div className="mb-3">
-                <Text strong>Languages:</Text>
-                <div>{user.userDetail?.languages || "Not updated"}</div>
+                <Text strong>Role:</Text>
+                <div>
+                  <Tag
+                    color={user.isAdmin ? "red" : "blue"}
+                    icon={
+                      user.isAdmin ? (
+                        <Shield size={12} />
+                      ) : (
+                        <UserIcon size={12} />
+                      )
+                    }
+                  >
+                    {user.isAdmin ? "Administrator" : "User"}
+                  </Tag>
+                </div>
               </div>
             </Col>
           </Row>
 
-          <div className="mb-4">
-            <Text strong>Reputation Score:</Text>
-            <div className="flex items-center space-x-2">
-              <Star color="#facc15" size={16} />
-              <span className="font-semibold">
-                {user.userDetail?.reputationScore || 0}
-              </span>
-            </div>
-          </div>
+          <Divider>Subscription Information</Divider>
+          {user.userSubscriptionInfo ? (
+            <div>
+              <Row className="mb-4" gutter={16}>
+                <Col span={12}>
+                  <div className="mb-3">
+                    <Text strong>Subscription Status:</Text>
+                    <div>
+                      <Tag
+                        color={
+                          user.userSubscriptionInfo.subscriptionStatus ===
+                          "active"
+                            ? "green"
+                            : user.userSubscriptionInfo.subscriptionStatus ===
+                                "expired"
+                              ? "red"
+                              : "orange"
+                        }
+                      >
+                        {user.userSubscriptionInfo.subscriptionStatus?.toUpperCase()}
+                      </Tag>
+                    </div>
+                  </div>
+                  <div className="mb-3">
+                    <Text strong>Premium Member:</Text>
+                    <div>
+                      <Tag
+                        color={
+                          user.userSubscriptionInfo.isPremium
+                            ? "gold"
+                            : "default"
+                        }
+                      >
+                        {user.userSubscriptionInfo.isPremium ? "Yes" : "No"}
+                      </Tag>
+                    </div>
+                  </div>
+                </Col>
+                <Col span={12}>
+                  <div className="mb-3">
+                    <Text strong>Auto Renew:</Text>
+                    <div>
+                      <Tag
+                        color={
+                          user.userSubscriptionInfo.isAutoRenew
+                            ? "green"
+                            : "red"
+                        }
+                      >
+                        {user.userSubscriptionInfo.isAutoRenew
+                          ? "Enabled"
+                          : "Disabled"}
+                      </Tag>
+                    </div>
+                  </div>
+                  {user.userSubscriptionInfo.subscriptionEndDate && (
+                    <div className="mb-3">
+                      <Text strong>Expires:</Text>
+                      <div className="flex items-center space-x-2">
+                        <Calendar size={14} />
+                        <span>
+                          {formatDate(
+                            user.userSubscriptionInfo.subscriptionEndDate
+                          )}
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                </Col>
+              </Row>
 
-          <Divider>Activity</Divider>
-          <Row gutter={16}>
-            <Col className="text-center" span={8}>
-              <div className="font-semibold text-2xl text-blue-600">
-                {user.totalPosts}
-              </div>
-              <div className="text-gray-500">Posts</div>
-            </Col>
-            <Col className="text-center" span={8}>
-              <div className="font-semibold text-2xl text-red-600">
-                {user.totalLikes}
-              </div>
-              <div className="text-gray-500">Likes</div>
-            </Col>
-            <Col className="text-center" span={8}>
-              <div className="font-semibold text-2xl text-green-600">
-                {user.totalComments}
-              </div>
-              <div className="text-gray-500">Comments</div>
-            </Col>
-          </Row>
-
-          <Divider>Recent Posts</Divider>
-          {user.posts && user.posts.length > 0 ? (
-            <div className="space-y-3">
-              {user.posts.slice(0, 3).map((post: any) => (
-                <Card key={post.id} size="small">
-                  <div className="flex items-center space-x-3">
-                    <img
-                      alt={post.title}
-                      className="w-15 h-10 object-cover rounded"
-                      src={
-                        post.thumbnail || "/placeholder.svg?height=40&width=60"
-                      }
-                    />
-                    <div className="flex-1">
-                      <Text strong className="block">
-                        {post.title}
+              {user.userSubscription?.pricingPlan && (
+                <Card size="small" className="mb-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <Text strong>
+                        {user.userSubscription.pricingPlan.name}
                       </Text>
-                      <div className="flex items-center space-x-2 mt-1">
-                        {post.tag && (
-                          <Tag
-                            color={
-                              tagOptions.find((t) => t.value === post.tag)
-                                ?.color
-                            }
-                          >
-                            {tagOptions.find((t) => t.value === post.tag)
-                              ?.label || post.tag}
-                          </Tag>
+                      <div className="text-sm text-gray-500">
+                        {user.userSubscription.pricingPlan.billingCycle} billing
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-lg font-bold text-blue-600">
+                        {formatPrice(
+                          user.userSubscription.pricingPlan.price,
+                          user.userSubscription.pricingPlan.currency
                         )}
-                        <Text className="text-xs" type="secondary">
-                          {post.commentCount} comments
-                        </Text>
+                      </div>
+                      <div className="text-xs text-gray-500">
+                        per {user.userSubscription.pricingPlan.billingCycle}
                       </div>
                     </div>
                   </div>
                 </Card>
-              ))}
+              )}
             </div>
           ) : (
-            <Text type="secondary">No posts yet</Text>
+            <Text type="secondary">No subscription information available</Text>
           )}
+
+          <Divider>Account Timeline</Divider>
+          <Row gutter={16}>
+            <Col span={12}>
+              <div className="mb-3">
+                <Text strong>Created:</Text>
+                <div className="flex items-center space-x-2">
+                  <Calendar size={14} />
+                  <span>{formatDate(user.createdAt)}</span>
+                </div>
+              </div>
+              {user.verifyAt && (
+                <div className="mb-3">
+                  <Text strong>Verified:</Text>
+                  <div className="flex items-center space-x-2">
+                    <Calendar size={14} />
+                    <span>{formatDate(user.verifyAt)}</span>
+                  </div>
+                </div>
+              )}
+            </Col>
+            <Col span={12}>
+              <div className="mb-3">
+                <Text strong>Last Updated:</Text>
+                <div className="flex items-center space-x-2">
+                  <Calendar size={14} />
+                  <span>{formatDate(user.updatedAt)}</span>
+                </div>
+              </div>
+              {user.userSubscription?.nextPaymentDate && (
+                <div className="mb-3">
+                  <Text strong>Next Payment:</Text>
+                  <div className="flex items-center space-x-2">
+                    <CreditCard size={14} />
+                    <span>
+                      {formatDate(user.userSubscription.nextPaymentDate)}
+                    </span>
+                  </div>
+                </div>
+              )}
+            </Col>
+          </Row>
         </div>
       )}
     </Drawer>

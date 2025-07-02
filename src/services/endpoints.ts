@@ -67,5 +67,11 @@ export const endpoints = {
       PAGINATION: "transaction/pagination",
     },
     //#endregion
+
+    //#region user
+    USER: {
+      PAGINATION: "user/pagination",
+    },
+    //#endregion
   },
 };

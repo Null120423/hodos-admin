@@ -3,11 +3,11 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { endpoints } from "../../../endpoints";
 import rootApi from "../../../rootApi";
 
-const useBlogCreate = () => {
+const useBlogUpdate = () => {
   const query = useQueryClient();
   const { isPending, isError, data, error, mutateAsync } = useMutation({
     mutationFn: (variables: any) => {
-      return rootApi.post(endpoints.API.BLOG.CREATE, variables);
+      return rootApi.patch(endpoints.API.BLOG.UPDATE, variables);
     },
     onSuccess: () => {
       query.invalidateQueries({
@@ -21,8 +21,8 @@ const useBlogCreate = () => {
     isError,
     data,
     error,
-    onCreate: mutateAsync,
+    onUpdate: mutateAsync,
   };
 };
 
-export default useBlogCreate;
+export default useBlogUpdate;

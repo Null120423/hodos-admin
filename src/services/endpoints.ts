@@ -6,6 +6,7 @@ export const endpoints = {
     },
     BLOG: {
       CREATE: "blog",
+      UPDATE: "blog",
       FORCE_DELETE: "blog/force",
       PAGINATION: "blog/pagination",
     },

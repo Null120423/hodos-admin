@@ -30,6 +30,9 @@ export default function UserTable({
   onToggleStatus,
   onDelete,
   isLoading,
+  total,
+  onChangePageSize,
+  where,
 }: any) {
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US");
@@ -200,9 +203,18 @@ export default function UserTable({
       dataSource={users}
       loading={isLoading}
       pagination={{
-        pageSize: 10,
+        pageSize: where.pageSize,
         showSizeChanger: true,
         showQuickJumper: true,
+        total: total,
+        current: where.pageIndex,
+        pageSizeOptions: ["5", "10", "20", "50", "100"],
+        onChange: (page, pageSize) => {
+          onChangePageSize({
+            pageIndex: pageSize == where.pageSize ? page : 1,
+            pageSize: pageSize,
+          });
+        },
         showTotal: (total, range) =>
           `${range[0]}-${range[1]} of ${total} users`,
       }}

@@ -73,6 +73,15 @@ export const NotificationScheduleListPage = lazy(
 );
 //#endregion
 
+//#region log
+export const BuildLogsPage = lazy(
+  () => import("../pages/admin/log/error/index")
+);
+export const ErrorLogsPage = lazy(
+  () => import("../pages/admin/log/error/index")
+);
+//#endregion
+
 export const Page404 = lazy(() => import("../pages/not-found"));
 
 // ----------------------------------------------------------------------
@@ -118,9 +127,6 @@ const AdminRoute = [
         path: ADMIN_ROUTES.BLOG_MANAGER_CREATE,
         element: <BlogManagerCreatePage />,
       },
-      { path: ADMIN_ROUTES.BUILD_LOGS, element: <BuildLogPage /> },
-      { path: ADMIN_ROUTES.ERROR_LOGS, element: <ErrorLogPage /> },
-
       //#region users
       {
         path: ADMIN_ROUTES.USER_LIST,
@@ -162,6 +168,17 @@ const AdminRoute = [
       {
         path: ADMIN_ROUTES.NOTIFICATION_SCHEDULE_LIST,
         element: <NotificationScheduleListPage />,
+      },
+      //#endregion
+
+      //#region log
+      {
+        path: ADMIN_ROUTES.LOG_BUILD,
+        element: <BuildLogsPage />,
+      },
+      {
+        path: ADMIN_ROUTES.LOG_ERROR,
+        element: <ErrorLogsPage />,
       },
       //#endregion
     ],

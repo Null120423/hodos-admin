@@ -16,6 +16,10 @@ export default function BlogTable({
   onEdit,
   onDelete,
   onToggleStatus,
+  where,
+  onChangePageSize,
+  total,
+  isLoading,
 }: any) {
   const columns = [
     {
@@ -53,7 +57,7 @@ export default function BlogTable({
       key: "tag",
       render: (tag: string) => {
         const tagOption = tagOptions.find(
-          (option: any) => option.value === tag,
+          (option: any) => option.value === tag
         );
 
         return tag ? (
@@ -69,13 +73,10 @@ export default function BlogTable({
       key: "status",
       render: (status: string, record: any) => (
         <div>
-          <Tag color={status === "published" ? "green" : "orange"}>
-            {status === "published" ? "Published" : "Draft"}
+          <Tag color={record.isPublish ? "green" : "orange"}>
+            {record.isPublish ? "Published" : "Draft"}
+            {status}
           </Tag>
-          <div className="text-xs text-gray-500 mt-1">
-            <div>👁 {record.views} views</div>
-            <div>❤️ {record.likes} likes</div>
-          </div>
         </div>
       ),
     },
@@ -143,12 +144,22 @@ export default function BlogTable({
     <Table
       columns={columns}
       dataSource={blogs}
+      loading={isLoading}
       pagination={{
-        pageSize: 10,
+        pageSize: where.pageSize,
         showSizeChanger: true,
         showQuickJumper: true,
+        total: total,
+        current: where.pageIndex,
+        pageSizeOptions: ["5", "10", "20", "50", "100"],
+        onChange: (page, pageSize) => {
+          onChangePageSize({
+            pageIndex: pageSize == where.pageSize ? page : 1,
+            pageSize: pageSize,
+          });
+        },
         showTotal: (total, range) =>
-          `${range[0]}-${range[1]} of ${total} blogs`,
+          `${range[0]}-${range[1]} of ${total} users`,
       }}
       rowKey="id"
     />

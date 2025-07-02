@@ -45,6 +45,11 @@ export default function UserManagementScreen() {
   const [selectedRole, setSelectedRole] = useState<string | undefined>();
   const [selectedStatus, setSelectedStatus] = useState<string | undefined>();
 
+  const [where, setWhere] = useState({
+    pageSize: 10,
+    pageIndex: 1,
+  });
+
   const {
     data: users,
     refetch,
@@ -55,8 +60,8 @@ export default function UserManagementScreen() {
     isLoading,
     isRefetching,
   } = useUserPagination({
-    skip: 0,
-    take: 10,
+    skip: (where.pageIndex - 1) * where.pageSize,
+    take: where.pageSize,
     where: {
       searchText,
       isAdmin: selectedRole === "admin",
@@ -276,7 +281,15 @@ export default function UserManagementScreen() {
         <Card>
           <UserTable
             isLoading={isLoading || isRefetching}
+            total={totalUser}
             users={users}
+            where={where}
+            onChangePageSize={(pagination: {
+              pageIndex: number;
+              pageSize: number;
+            }) => {
+              setWhere(pagination);
+            }}
             onDelete={handleDeleteUser}
             onEdit={handleEditUser}
             onToggleStatus={handleToggleUserStatus}

@@ -1,7 +1,20 @@
-import { Button, Form, Input, Modal, Select, Space, Tag, Upload } from "antd";
+import {
+  Button,
+  Form,
+  Image,
+  Input,
+  Modal,
+  Select,
+  Space,
+  Tag,
+  Upload,
+  UploadFile,
+} from "antd";
 import JoditEditor from "jodit-react";
 import { Upload as UploadIcon } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
+
+import { getBase64 } from "@/lib/utils";
 export default function BlogModal({
   visible,
   editingBlog,
@@ -11,10 +24,12 @@ export default function BlogModal({
   onCancel,
   onFinish,
   onUploadChange,
+  isLoading,
 }: any) {
   const editor = useRef(null);
   const [content, setContent] = useState("");
-
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState("");
   const config = useMemo(
     () => ({
       readonly: false,
@@ -22,6 +37,14 @@ export default function BlogModal({
     }),
     []
   );
+  const handlePreview = async (file: UploadFile) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj as any);
+    }
+
+    setPreviewImage(file.url || (file.preview as string));
+    setPreviewOpen(true);
+  };
 
   return (
     <Modal
@@ -56,19 +79,32 @@ export default function BlogModal({
 
         <Form.Item label="Thumbnail">
           <Upload
-            beforeUpload={() => false}
+            accept="image/*"
+            action="https://hodos-api.gitlabserver.id.vn/common/upload-image"
             fileList={fileList}
             listType="picture-card"
             maxCount={1}
             onChange={onUploadChange}
+            onPreview={handlePreview}
           >
             {fileList.length === 0 && (
-              <div>
+              <div className="flex flex-col items-center">
                 <UploadIcon size={20} />
                 <div style={{ marginTop: 8 }}>Upload</div>
               </div>
             )}
           </Upload>
+          {previewImage && (
+            <Image
+              preview={{
+                visible: previewOpen,
+                onVisibleChange: (visible) => setPreviewOpen(visible),
+                afterOpenChange: (visible) => !visible && setPreviewImage(""),
+              }}
+              src={previewImage}
+              wrapperStyle={{ display: "none" }}
+            />
+          )}
         </Form.Item>
 
         <Form.Item
@@ -87,7 +123,7 @@ export default function BlogModal({
 
         <Form.Item>
           <Space>
-            <Button htmlType="submit" type="primary">
+            <Button htmlType="submit" loading={isLoading} type="primary">
               {editingBlog ? "Update" : "Create"}
             </Button>
             <Button onClick={onCancel}>Cancel</Button>

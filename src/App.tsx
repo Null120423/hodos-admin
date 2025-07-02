@@ -10,7 +10,7 @@ function App() {
       theme={{
         token: {
           // Seed Token
-          colorPrimary: "#F5896C",
+          colorPrimary: "#276FD8",
           borderRadius: 4,
 
           // Alias Token

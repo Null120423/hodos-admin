@@ -63,8 +63,8 @@ const menuItems: MenuItem[] = [
     getItem("Notification", ADMIN_ROUTES.NOTIFICATION_LIST),
   ]),
   getItem("System Logs", "logs", <CodeOutlined />, [
-    getItem("Build Logs", ADMIN_ROUTES.BUILD_LOGS),
-    getItem("Error Logs", ADMIN_ROUTES.ERROR_LOGS),
+    getItem("Build Logs", ADMIN_ROUTES.LOG_BUILD),
+    getItem("Error Logs", ADMIN_ROUTES.LOG_ERROR),
   ]),
 
   getItem("Settings", ADMIN_ROUTES.SETTING, <SettingOutlined />),

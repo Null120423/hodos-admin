@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+
 import { endpoints } from "../../../endpoints";
 import rootApi from "../../../rootApi";
 
@@ -15,8 +16,11 @@ const useBlogPagination = (variables: any) => {
   return {
     isLoading,
     isError,
-    data: formatData ? formatData[0] : [],
-    total: formatData ? formatData[1] : 0,
+    data: formatData ? formatData?.data : [],
+    total: formatData ? formatData?.data : 0,
+    totalViews: formatData ? formatData?.totalViews : 0,
+    totalPublished: formatData ? formatData?.totalPublished : 0,
+    totalDrafts: formatData ? formatData?.totalDrafts : 0,
     error,
     refetch,
     isFetching,

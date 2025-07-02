@@ -7,7 +7,6 @@ import {
   Form,
   Input,
   Layout,
-  message,
   Row,
   Select,
   Space,
@@ -22,79 +21,9 @@ import BlogModal from "./BlogModal";
 import BlogPreviewDrawer from "./BlogPreviewDrawer";
 import BlogTable from "./BlogTable";
 
-// Mock data for blogs
-const mockBlogs = [
-  {
-    id: "1",
-    title: "Khám phá ẩm thực đường phố Sài Gòn",
-    thumbnail:
-      "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=300&h=200&fit=crop",
-    tag: "Ẩm thực",
-    content: `
-      <h2>Giới thiệu về ẩm thực đường phố Sài Gòn</h2>
-      <p>Sài Gòn nổi tiếng với nền ẩm thực đường phố phong phú và đa dạng. Từ những món ăn truyền thống như phở, bánh mì đến các món ăn vặt độc đáo, thành phố này luôn mang đến những trải nghiệm ẩm thực tuyệt vời.</p>
-      
-      <h3>Những món ăn không thể bỏ qua</h3>
-      <ul>
-        <li><strong>Phở:</strong> Món ăn quốc hồn quốc túy của Việt Nam</li>
-        <li><strong>Bánh mì:</strong> Sự kết hợp hoàn hảo giữa Đông và Tây</li>
-        <li><strong>Bún bò Huế:</strong> Hương vị đậm đà từ cố đô</li>
-        <li><strong>Bánh xèo:</strong> Món ăn dân dã nhưng hấp dẫn</li>
-      </ul>
-      
-      <p>Mỗi món ăn đều mang trong mình một câu chuyện riêng, phản ánh văn hóa và lịch sử của vùng đất Nam Bộ.</p>
-    `,
-    createdAt: "2024-01-15T10:30:00Z",
-    updatedAt: "2024-01-20T14:45:00Z",
-    status: "published",
-    views: 1250,
-    likes: 89,
-  },
-  {
-    id: "2",
-    title: "Top 10 địa điểm du lịch hấp dẫn tại TP.HCM",
-    thumbnail:
-      "https://images.unsplash.com/photo-1583417319070-4a69db38a482?w=300&h=200&fit=crop",
-    tag: "Du lịch",
-    content: `
-      <h2>Khám phá những địa điểm du lịch nổi tiếng</h2>
-      <p>Thành phố Hồ Chí Minh không chỉ là trung tâm kinh tế mà còn là điểm đến du lịch hấp dẫn với nhiều địa điểm thú vị.</p>
-      
-      <h3>Danh sách các địa điểm nổi bật</h3>
-      <ol>
-        <li>Chợ Bến Thành - Biểu tượng của Sài Gòn</li>
-        <li>Dinh Độc Lập - Chứng tích lịch sử</li>
-        <li>Nhà thờ Đức Bà - Kiến trúc Gothic tuyệt đẹp</li>
-        <li>Phố đi bộ Nguyễn Huệ - Không gian giải trí hiện đại</li>
-        <li>Bảo tàng Chứng tích Chiến tranh - Bài học lịch sử</li>
-      </ol>
-    `,
-    createdAt: "2024-01-10T09:15:00Z",
-    updatedAt: "2024-01-18T16:20:00Z",
-    status: "published",
-    views: 2100,
-    likes: 156,
-  },
-  {
-    id: "3",
-    title: "Hướng dẫn di chuyển bằng xe buýt tại Sài Gòn",
-    thumbnail:
-      "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=300&h=200&fit=crop",
-    tag: "Giao thông",
-    content: `
-      <h2>Hệ thống xe buýt công cộng Sài Gòn</h2>
-      <p>Xe buýt là phương tiện giao thông công cộng tiện lợi và kinh tế để di chuyển trong thành phố.</p>
-      
-      <h3>Các tuyến xe buýt chính</h3>
-      <p>Hệ thống xe buýt Sài Gòn có hơn 100 tuyến khác nhau, kết nối các quận huyện trong thành phố.</p>
-    `,
-    createdAt: "2024-01-05T14:20:00Z",
-    updatedAt: "2024-01-12T11:30:00Z",
-    status: "draft",
-    views: 450,
-    likes: 23,
-  },
-];
+import useBlogCreate from "@/services/hooks/admin/blog/useBlogCreate";
+import useBlogPagination from "@/services/hooks/admin/blog/useBlogPagination";
+import useBlogUpdate from "@/services/hooks/admin/blog/useBlogUpdate";
 
 const tagOptions = [
   { label: "Cuisine", value: "Cuisine", color: "red" },
@@ -106,7 +35,6 @@ const tagOptions = [
 ];
 
 export default function BlogAdminScreen() {
-  const [blogs, setBlogs] = useState(mockBlogs);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isPreviewVisible, setIsPreviewVisible] = useState(false);
   const [editingBlog, setEditingBlog] = useState<any>(null);
@@ -116,6 +44,29 @@ export default function BlogAdminScreen() {
   const [searchText, setSearchText] = useState("");
   const [selectedTag, setSelectedTag] = useState<string | undefined>();
   const [selectedStatus, setSelectedStatus] = useState<string | undefined>();
+  const { onUpdate, isLoading: isLoadingUpdate } = useBlogUpdate();
+  const { onCreate, isLoading: isLoadingCreate } = useBlogCreate();
+
+  const [where, setWhere] = useState({
+    pageSize: 10,
+    pageIndex: 1,
+  });
+  const {
+    data: blogs,
+    isLoading,
+    isRefetching,
+    totalViews,
+    totalPublished,
+    totalDrafts,
+  } = useBlogPagination({
+    skip: (where.pageIndex - 1) * where.pageSize,
+    take: where.pageSize,
+    where: {
+      title: searchText,
+      tag: selectedTag,
+      status: selectedStatus,
+    },
+  });
 
   const handleCreate = () => {
     setEditingBlog(null);
@@ -147,8 +98,14 @@ export default function BlogAdminScreen() {
   };
 
   const handleDelete = (id: string) => {
-    setBlogs(blogs.filter((blog) => blog.id !== id));
-    message.success("Xóa bài viết thành công!");
+    alert();
+    const blog = blogs.find((b: any) => b.id === id);
+
+    if (!blog) return;
+    onUpdate({
+      ...blog,
+      isPublish: !blog.isPublish,
+    });
   };
 
   const handlePreview = (blog: any) => {
@@ -157,46 +114,27 @@ export default function BlogAdminScreen() {
   };
 
   const handleSubmit = async (values: any) => {
-    try {
-      const thumbnailUrl = fileList[0]?.url || fileList[0]?.response?.url || "";
+    const thumbnailUrl = fileList[0]?.url || fileList[0]?.response?.url || "";
+    const body = {
+      ...values,
+      thumbnail: thumbnailUrl,
+    };
 
-      if (editingBlog) {
-        // Update existing blog
-        const updatedBlogs = blogs.map((blog) =>
-          blog.id === editingBlog.id
-            ? {
-                ...blog,
-                ...values,
-                thumbnail: thumbnailUrl,
-                updatedAt: new Date().toISOString(),
-              }
-            : blog
-        );
-
-        setBlogs(updatedBlogs);
-        message.success("Cập nhật bài viết thành công!");
-      } else {
-        // Create new blog
-        const newBlog = {
-          id: Date.now().toString(),
-          ...values,
-          thumbnail: thumbnailUrl,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-          status: "draft",
-          views: 0,
-          likes: 0,
-        };
-
-        setBlogs([newBlog, ...blogs]);
-        message.success("Tạo bài viết thành công!");
-      }
-
-      setIsModalVisible(false);
-      form.resetFields();
-      setFileList([]);
-    } catch (error) {
-      message.error("Có lỗi xảy ra!");
+    if (editingBlog) {
+      await onUpdate({
+        id: editingBlog.id,
+        ...body,
+      }).then(() => {
+        setIsModalVisible(false);
+        form.resetFields();
+        setFileList([]);
+      });
+    } else {
+      await onCreate(body).then(() => {
+        setIsModalVisible(false);
+        form.resetFields();
+        setFileList([]);
+      });
     }
   };
 
@@ -207,37 +145,11 @@ export default function BlogAdminScreen() {
   };
 
   const toggleStatus = (blog: any) => {
-    const updatedBlogs = blogs.map((b) =>
-      b.id === blog.id
-        ? {
-            ...b,
-            status: b.status === "published" ? "draft" : "published",
-            updatedAt: new Date().toISOString(),
-          }
-        : b
-    );
-
-    setBlogs(updatedBlogs);
-    message.success(
-      `${blog.status === "published" ? "Ẩn" : "Xuất bản"} bài viết thành công!`
-    );
+    onUpdate({
+      ...blog,
+      isPublish: !blog.isPublish,
+    });
   };
-
-  const filteredBlogs = blogs.filter((blog) => {
-    const matchesSearch = blog.title
-      .toLowerCase()
-      .includes(searchText.toLowerCase());
-    const matchesTag = !selectedTag || blog.tag === selectedTag;
-    const matchesStatus = !selectedStatus || blog.status === selectedStatus;
-
-    return matchesSearch && matchesTag && matchesStatus;
-  });
-
-  const totalViews = blogs.reduce((sum, blog) => sum + blog.views, 0);
-  const publishedCount = blogs.filter(
-    (blog) => blog.status === "published"
-  ).length;
-  const draftCount = blogs.filter((blog) => blog.status === "draft").length;
 
   return (
     <Layout className="min-h-screen">
@@ -272,7 +184,7 @@ export default function BlogAdminScreen() {
               <Statistic
                 prefix="✅"
                 title="Published"
-                value={publishedCount}
+                value={totalPublished}
                 valueStyle={{ color: "#3f8600" }}
               />
             </Card>
@@ -282,7 +194,7 @@ export default function BlogAdminScreen() {
               <Statistic
                 prefix="📄"
                 title="Draft"
-                value={draftCount}
+                value={totalDrafts}
                 valueStyle={{ color: "#cf1322" }}
               />
             </Card>
@@ -355,8 +267,19 @@ export default function BlogAdminScreen() {
         {/* Blog Table */}
         <Card>
           <BlogTable
-            blogs={filteredBlogs}
+            blogs={blogs}
+            isLoading={
+              isLoading || isRefetching || isLoadingUpdate || isLoadingCreate
+            }
             tagOptions={tagOptions}
+            where={where}
+            onChangePageSize={(newWhere: any) => {
+              setWhere({
+                ...where,
+                pageSize: newWhere.pageSize,
+                pageIndex: newWhere.pageIndex,
+              });
+            }}
             onDelete={handleDelete}
             onEdit={handleEdit}
             onPreview={handlePreview}
@@ -369,6 +292,7 @@ export default function BlogAdminScreen() {
           editingBlog={editingBlog}
           fileList={fileList}
           form={form}
+          isLoading={isLoadingUpdate || isLoadingCreate}
           tagOptions={tagOptions}
           visible={isModalVisible}
           onCancel={() => setIsModalVisible(false)}

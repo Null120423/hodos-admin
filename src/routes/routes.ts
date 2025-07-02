@@ -14,10 +14,6 @@ export const ADMIN_ROUTES = {
   BLOG_MANAGER_DETAIL: "/blog-manager/detail",
   BLOG_MANAGER_EDIT: "/blog-manager/edit",
 
-  // regionFragment: log sidebars
-  BUILD_LOGS: "/build-logs",
-  ERROR_LOGS: "/error-logs",
-
   //#region users
   USER_LIST: "/user-list",
   USER_POST: "/user-post",
@@ -38,6 +34,11 @@ export const ADMIN_ROUTES = {
   //#region  notifications
   NOTIFICATION_LIST: "/notification-list",
   NOTIFICATION_SCHEDULE_LIST: "/notification-schedule-list",
+  //#endregion
+
+  //#region log
+  LOG_ERROR: "/log-error",
+  LOG_BUILD: "/log-build",
   //#endregion
 };
 

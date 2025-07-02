@@ -83,7 +83,9 @@ export default function UserManagementScreen() {
     });
   };
 
-  const handleDeleteUser = (id: string) => {};
+  const handleDeleteUser = (id: string) => {
+    console.log("Deleting user with ID:", id);
+  };
 
   const handleViewUserDetail = (user: any) => {
     setSelectedUser(user);

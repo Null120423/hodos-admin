@@ -111,17 +111,14 @@ const DefaultAdminLayout = ({ children }: { children?: React.ReactNode }) => {
       >
         <div
           style={{
-            height: 64,
-            margin: 16,
             borderRadius: 8,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            color: "#fff",
             fontWeight: 700,
           }}
         >
-          HODOS Admin
+          <img alt="Logo" src="../../public/logo.png" width={"100%"} />
         </div>
         <Menu
           defaultOpenKeys={selectedKeys}

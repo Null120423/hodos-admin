@@ -1,5 +1,5 @@
 import { Avatar, Card, Col, Divider, Drawer, Row, Tag, Typography } from "antd";
-import { Star, UserIcon, CreditCard, Calendar, Shield } from "lucide-react";
+import { Calendar, CreditCard, Shield, UserIcon } from "lucide-react";
 
 const { Title, Text } = Typography;
 
@@ -177,7 +177,7 @@ export default function UserDetailDrawer({ visible, user, onClose }: any) {
               </Row>
 
               {user.userSubscription?.pricingPlan && (
-                <Card size="small" className="mb-4">
+                <Card className="mb-4" size="small">
                   <div className="flex items-center justify-between">
                     <div>
                       <Text strong>

@@ -8,6 +8,7 @@ import {
   Row,
   Select,
   Space,
+  Switch,
 } from "antd";
 import dayjs from "dayjs";
 import { useEffect } from "react";
@@ -17,6 +18,8 @@ import {
   NotificationType,
   ScheduledNotification,
 } from "../type";
+
+import useUserSelectBox from "@/services/hooks/admin/user/useSelectBox";
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -29,11 +32,6 @@ interface ScheduledNotificationFormProps {
 }
 
 // Mock users - replace with actual API call
-const mockUsers = [
-  { id: "user-1", name: "John Doe", email: "john@example.com" },
-  { id: "user-2", name: "Jane Smith", email: "jane@example.com" },
-  { id: "user-3", name: "Bob Johnson", email: "bob@example.com" },
-];
 
 export function ScheduledNotificationForm({
   initialValues,
@@ -42,6 +40,7 @@ export function ScheduledNotificationForm({
   loading = false,
 }: ScheduledNotificationFormProps) {
   const [form] = Form.useForm();
+  const { data: users } = useUserSelectBox();
 
   useEffect(() => {
     if (initialValues) {
@@ -75,17 +74,18 @@ export function ScheduledNotificationForm({
           <Form.Item
             help="Leave empty to send to all users"
             label="Target User"
-            name="userId"
+            name="targetUserIds"
           >
             <Select
               allowClear
               showSearch
+              mode="multiple"
               optionFilterProp="children"
               placeholder="Select a user (optional)"
             >
-              {mockUsers.map((user) => (
+              {users.map((user: any) => (
                 <Option key={user.id} value={user.id}>
-                  {user.name} ({user.email})
+                  {user.username} ({user.email})
                 </Option>
               ))}
             </Select>
@@ -110,17 +110,30 @@ export function ScheduledNotificationForm({
           </Form.Item>
         </Col>
       </Row>
+      <Row gutter={16}>
+        <Col span={12}>
+          <Form.Item
+            label="Title"
+            name="title"
+            rules={[
+              { required: true, message: "Please enter notification title" },
+              { max: 255, message: "Title must be less than 255 characters" },
+            ]}
+          >
+            <Input placeholder="Enter notification title" />
+          </Form.Item>
+        </Col>
 
-      <Form.Item
-        label="Title"
-        name="title"
-        rules={[
-          { required: true, message: "Please enter notification title" },
-          { max: 255, message: "Title must be less than 255 characters" },
-        ]}
-      >
-        <Input placeholder="Enter notification title" />
-      </Form.Item>
+        <Col span={12}>
+          <Form.Item
+            label="Is All User"
+            name="isAllUser"
+            valuePropName="checked"
+          >
+            <Switch />
+          </Form.Item>
+        </Col>
+      </Row>
 
       <Form.Item
         label="Message"

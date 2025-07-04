@@ -1,11 +1,6 @@
 import type { ColumnsType } from "antd/es/table";
 
-import {
-  CheckOutlined,
-  EyeOutlined,
-  LinkOutlined,
-  SearchOutlined,
-} from "@ant-design/icons";
+import { EyeOutlined, LinkOutlined, SearchOutlined } from "@ant-design/icons";
 import {
   Badge,
   Button,
@@ -19,64 +14,21 @@ import {
   Tag,
   Tooltip,
   Typography,
-  message,
 } from "antd";
 import dayjs from "dayjs";
 import { useState } from "react";
 
 import { type Notification, NotificationType } from "../type";
 
+import JSONView from "./json-v";
+
+import useNotificationPagination from "@/services/hooks/admin/notification/useNotificationPagination";
+import useUserSelectBox from "@/services/hooks/admin/user/useSelectBox";
+
 const { Search } = Input;
 const { Option } = Select;
 const { RangePicker } = DatePicker;
 const { Text, Paragraph } = Typography;
-
-// Mock data - replace with actual API calls
-const mockNotifications: Notification[] = [
-  {
-    id: "1",
-    userId: "user-1",
-    user: { id: "user-1", name: "John Doe", email: "john@example.com" },
-    scheduledNotificationId: "sched-1",
-    title: "Trip Reminder",
-    message:
-      "Your mountain hiking trip starts tomorrow! Don't forget to pack your gear.",
-    isRead: false,
-    type: NotificationType.REMINDER,
-    sentAt: "2024-12-24T09:00:00Z",
-    linkTo: "/trips/trip-123",
-    metadata: { tripId: "trip-123", tripName: "Mountain Hike" },
-    createdAt: "2024-12-24T09:00:00Z",
-    updatedAt: "2024-12-24T09:00:00Z",
-  },
-  {
-    id: "2",
-    userId: "user-2",
-    user: { id: "user-2", name: "Jane Smith", email: "jane@example.com" },
-    title: "New Content Available",
-    message:
-      "Check out the latest travel guides for your upcoming destinations.",
-    isRead: true,
-    readAt: "2024-12-23T15:30:00Z",
-    type: NotificationType.NEW_CONTENT,
-    sentAt: "2024-12-23T14:00:00Z",
-    linkTo: "/content/travel-guides",
-    createdAt: "2024-12-23T14:00:00Z",
-    updatedAt: "2024-12-23T15:30:00Z",
-  },
-  {
-    id: "3",
-    userId: "user-1",
-    user: { id: "user-1", name: "John Doe", email: "john@example.com" },
-    title: "System Alert",
-    message: "Your account security settings have been updated.",
-    isRead: false,
-    type: NotificationType.ALERT,
-    sentAt: "2024-12-22T10:15:00Z",
-    createdAt: "2024-12-22T10:15:00Z",
-    updatedAt: "2024-12-22T10:15:00Z",
-  },
-];
 
 const typeColors = {
   [NotificationType.INFO]: "blue",
@@ -88,9 +40,6 @@ const typeColors = {
 };
 
 const NotificationsList = () => {
-  const [notifications, setNotifications] =
-    useState<Notification[]>(mockNotifications);
-  const [loading, setLoading] = useState(false);
   const [selectedNotification, setSelectedNotification] =
     useState<Notification | null>(null);
   const [isDetailModalVisible, setIsDetailModalVisible] = useState(false);
@@ -102,92 +51,45 @@ const NotificationsList = () => {
     null
   );
 
-  const filteredNotifications = notifications.filter((notification) => {
-    const matchesSearch =
-      !searchText ||
-      notification.title.toLowerCase().includes(searchText.toLowerCase()) ||
-      notification.message.toLowerCase().includes(searchText.toLowerCase()) ||
-      notification.user.name.toLowerCase().includes(searchText.toLowerCase());
-
-    const matchesRead =
-      readFilter === undefined || notification.isRead === readFilter;
-    const matchesType = !typeFilter || notification.type === typeFilter;
-    const matchesUser = !userFilter || notification.userId === userFilter;
-
-    const matchesDate =
-      !dateRange ||
-      (dayjs(notification.sentAt).isAfter(dateRange[0]) &&
-        dayjs(notification.sentAt).isBefore(dateRange[1]));
-
-    return (
-      matchesSearch && matchesRead && matchesType && matchesUser && matchesDate
-    );
+  const { data: users } = useUserSelectBox();
+  const [where, setWhere] = useState({
+    pageIndex: 1,
+    pageSize: 5,
   });
-
-  const unreadCount = notifications.filter((n) => !n.isRead).length;
-
-  const handleMarkAsRead = async (id: string) => {
-    try {
-      setLoading(true);
-      // API call to mark as read
-      setNotifications((prev) =>
-        prev.map((n) =>
-          n.id === id
-            ? {
-                ...n,
-                isRead: true,
-                readAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString(),
-              }
-            : n
-        )
-      );
-      message.success("Notification marked as read");
-    } catch (error) {
-      message.error("Failed to mark notification as read");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleMarkAllAsRead = async () => {
-    try {
-      setLoading(true);
-      // API call to mark all as read
-      const now = new Date().toISOString();
-
-      setNotifications((prev) =>
-        prev.map((n) =>
-          !n.isRead ? { ...n, isRead: true, readAt: now, updatedAt: now } : n
-        )
-      );
-      message.success("All notifications marked as read");
-    } catch (error) {
-      message.error("Failed to mark all notifications as read");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const {
+    data: notifications,
+    unreadCount,
+    isLoading,
+    isRefetching,
+    total,
+  } = useNotificationPagination({
+    skip: (where.pageIndex - 1) * where.pageSize,
+    take: where.pageSize,
+    where: {
+      isRead: readFilter,
+      type: typeFilter,
+      userId: userFilter,
+      sentAt: dateRange
+        ? {
+            gte: dateRange[0].startOf("day").toISOString(),
+            lte: dateRange[1].endOf("day").toISOString(),
+          }
+        : undefined,
+      title: searchText ? { contains: searchText } : undefined,
+      message: searchText ? { contains: searchText } : undefined,
+    },
+  });
 
   const handleViewDetails = (notification: Notification) => {
     setSelectedNotification(notification);
     setIsDetailModalVisible(true);
-
-    // Mark as read when viewing details
-    if (!notification.isRead) {
-      handleMarkAsRead(notification.id);
-    }
   };
-
-  const uniqueUsers = Array.from(new Set(notifications.map((n) => n.user.id)))
-    .map((id) => notifications.find((n) => n.user.id === id)?.user)
-    .filter(Boolean);
 
   const columns: ColumnsType<Notification> = [
     {
       title: "Status",
       key: "status",
-      width: 60,
+      width: 100,
       render: (_, record) => (
         <Badge
           status={record.isRead ? "default" : "processing"}
@@ -217,7 +119,7 @@ const NotificationsList = () => {
       width: 150,
       render: (_, record) => (
         <div>
-          <div className="font-medium">{record.user.name}</div>
+          <div className="font-medium">{record.user.username}</div>
           <div className="text-gray-500 text-sm">{record.user.email}</div>
         </div>
       ),
@@ -280,6 +182,7 @@ const NotificationsList = () => {
       title: "Actions",
       key: "actions",
       width: 120,
+      align: "center",
       fixed: "right",
       render: (_, record) => (
         <Space>
@@ -290,16 +193,6 @@ const NotificationsList = () => {
               onClick={() => handleViewDetails(record)}
             />
           </Tooltip>
-
-          {!record.isRead && (
-            <Tooltip title="Mark as Read">
-              <Button
-                icon={<CheckOutlined />}
-                type="text"
-                onClick={() => handleMarkAsRead(record.id)}
-              />
-            </Tooltip>
-          )}
         </Space>
       ),
     },
@@ -317,16 +210,6 @@ const NotificationsList = () => {
               </Text>
             )}
           </div>
-          {unreadCount > 0 && (
-            <Button
-              icon={<CheckOutlined />}
-              loading={loading}
-              type="primary"
-              onClick={handleMarkAllAsRead}
-            >
-              Mark All as Read
-            </Button>
-          )}
         </div>
 
         <div className="mb-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
@@ -372,9 +255,9 @@ const NotificationsList = () => {
             value={userFilter}
             onChange={setUserFilter}
           >
-            {uniqueUsers.map((user) => (
+            {users.map((user: any) => (
               <Option key={user!.id} value={user!.id}>
-                {user!.name}
+                {user!.username} ({user!.email})
               </Option>
             ))}
           </Select>
@@ -395,17 +278,25 @@ const NotificationsList = () => {
 
         <Table
           columns={columns}
-          dataSource={filteredNotifications}
-          loading={loading}
+          dataSource={notifications}
+          loading={isLoading || isRefetching}
           pagination={{
-            total: filteredNotifications.length,
-            pageSize: 10,
+            current: where.pageIndex,
+            onChange: (page, pageSize) => {
+              setWhere((prev) => ({
+                ...prev,
+                pageIndex: page,
+                pageSize: pageSize || prev.pageSize,
+              }));
+            },
+            pageSizeOptions: ["5", "10", "20", "50"],
+            defaultPageSize: 5,
             showSizeChanger: true,
-            showQuickJumper: true,
+            total: total,
+            pageSize: where.pageSize,
             showTotal: (total, range) =>
               `${range[0]}-${range[1]} of ${total} items`,
           }}
-          rowClassName={(record) => (record.isRead ? "" : "bg-blue-50")}
           rowKey="id"
           scroll={{ x: 1200 }}
         />
@@ -424,7 +315,7 @@ const NotificationsList = () => {
         ].filter(Boolean)}
         open={isDetailModalVisible}
         title="Notification Details"
-        width={600}
+        width={"60%"}
         onCancel={() => setIsDetailModalVisible(false)}
       >
         {selectedNotification && (
@@ -453,7 +344,10 @@ const NotificationsList = () => {
 
               <div>
                 <Text strong>User:</Text>
-                <div className="mt-1">{selectedNotification.user.name}</div>
+                <div className="mt-1">
+                  {selectedNotification?.user?.username} (
+                  {selectedNotification?.user?.email})
+                </div>
               </div>
             </div>
 
@@ -490,12 +384,7 @@ const NotificationsList = () => {
 
             {selectedNotification.metadata && (
               <div>
-                <Text strong>Metadata:</Text>
-                <div className="mt-1">
-                  <pre className="bg-gray-100 p-2 rounded text-sm overflow-auto">
-                    {JSON.stringify(selectedNotification.metadata, null, 2)}
-                  </pre>
-                </div>
+                <JSONView subscriptionData={selectedNotification.metadata} />
               </div>
             )}
           </div>

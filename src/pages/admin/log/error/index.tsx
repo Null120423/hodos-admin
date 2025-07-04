@@ -30,154 +30,70 @@ import {
 import dayjs from "dayjs";
 import { useMemo, useState } from "react";
 
+import useLogErrorPagination from "@/services/hooks/admin/logs/error/useLogErrorPagination";
+
 const { Title, Text } = Typography;
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 
-const sampleData = [
-  {
-    id: "70936f97-8d5d-4dc6-9ef5-2793ea706b9a",
-    createdAt: "2025-07-02T09:58:18.355Z",
-    project: "HODOS_ADMIN",
-    source: "https://github.com/Tran-Huu-Tai-12-04-23/hodos-admin",
-    environments: "LOCALHOST",
-    timestamp: "2025-07-02T09:58:18.337Z",
-    path: "/log/error-log",
-    name: "BadRequestException",
-    error:
-      '{"response":{"message":["skip must be a number conforming to the specified constraints","take must be a number conforming to the specified constraints"],"error":"Bad Request","statusCode":400},"status":400,"options":{},"message":"Bad Request Exception","name":"BadRequestException"}',
-    message:
-      "skip must be a number conforming to the specified constraints + take must be a number conforming to the specified constraints",
-    isFixed: false,
-  },
-  {
-    id: "5e9cbf8a-73ae-4071-8714-4958a5a4e087",
-    createdAt: "2025-07-02T09:58:00.939Z",
-    project: "HODOS_ADMIN",
-    source: "https://github.com/Tran-Huu-Tai-12-04-23/hodos-admin",
-    environments: "LOCALHOST",
-    timestamp: "2025-07-02T09:58:00.937Z",
-    path: "/favicon.ico",
-    name: "NotFoundException",
-    error:
-      '{"response":{"message":"Cannot GET /favicon.ico","error":"Not Found","statusCode":404},"status":404,"options":{},"message":"Cannot GET /favicon.ico","name":"NotFoundException"}',
-    message: "Cannot GET /favicon.ico",
-    isFixed: true,
-  },
-  {
-    id: "30b3d1d7-5546-4dac-864b-d2dcdbad555c",
-    createdAt: "2025-07-02T09:58:00.680Z",
-    project: "HODOS_ADMIN",
-    source: "https://github.com/Tran-Huu-Tai-12-04-23/hodos-admin",
-    environments: "LOCALHOST",
-    timestamp: "2025-07-02T09:58:00.653Z",
-    path: "/",
-    name: "NotFoundException",
-    error:
-      '{"response":{"message":"Cannot GET /","error":"Not Found","statusCode":404},"status":404,"options":{},"message":"Cannot GET /","name":"NotFoundException"}',
-    message: "Cannot GET /",
-    isFixed: false,
-  },
-];
-
-interface LogEntry {
-  id: string;
-  createdAt: string;
-  project: string;
-  source: string;
-  environments: string;
-  timestamp: string;
-  path: string;
-  name: string;
-  error: string;
-  message: string;
-  isFixed: boolean;
-}
-
 export default function ErrorLogManager() {
-  const [data, setData] = useState<LogEntry[]>(sampleData);
   const [searchText, setSearchText] = useState("");
   const [selectedProject, setSelectedProject] = useState<string>("");
   const [selectedEnvironment, setSelectedEnvironment] = useState<string>("");
   const [selectedErrorType, setSelectedErrorType] = useState<string>("");
   const [showOnlyUnfixed, setShowOnlyUnfixed] = useState(false);
   const [drawerVisible, setDrawerVisible] = useState(false);
-  const [selectedLog, setSelectedLog] = useState<LogEntry | null>(null);
+  const [selectedLog, setSelectedLog] = useState<any>(null);
   const [dateRange, setDateRange] = useState<[dayjs.Dayjs, dayjs.Dayjs] | null>(
     null
   );
+  const [where, setWhere] = useState({
+    pageIndex: 1,
+    pageSize: 5,
+  });
+  const { data, isLoading, isRefetching, total } = useLogErrorPagination({
+    skip: (where.pageIndex - 1) * where.pageSize,
+    take: where.pageSize,
+    where: {
+      project: selectedProject,
+      environments: selectedEnvironment,
+      name: selectedErrorType,
+      isFixed: showOnlyUnfixed ? false : undefined,
+      createdAt: dateRange
+        ? {
+            gte: dateRange[0].startOf("day").toISOString(),
+            lte: dateRange[1].endOf("day").toISOString(),
+          }
+        : undefined,
+      message: searchText ? { contains: searchText } : undefined,
+    },
+  });
 
   // Get unique values for filters
-  const projects = [...new Set(data.map((item) => item.project))];
-  const environments = [...new Set(data.map((item) => item.environments))];
-  const errorTypes = [...new Set(data.map((item) => item.name))];
-
-  // Filter data based on search and filters
-  const filteredData = useMemo(() => {
-    return data.filter((item) => {
-      const matchesSearch =
-        !searchText ||
-        item.message.toLowerCase().includes(searchText.toLowerCase()) ||
-        item.path.toLowerCase().includes(searchText.toLowerCase()) ||
-        item.name.toLowerCase().includes(searchText.toLowerCase());
-
-      const matchesProject =
-        !selectedProject || item.project === selectedProject;
-      const matchesEnvironment =
-        !selectedEnvironment || item.environments === selectedEnvironment;
-      const matchesErrorType =
-        !selectedErrorType || item.name === selectedErrorType;
-      const matchesFixedStatus = !showOnlyUnfixed || !item.isFixed;
-
-      let matchesDateRange = true;
-
-      if (dateRange) {
-        const itemDate = dayjs(item.createdAt);
-
-        matchesDateRange =
-          itemDate.isAfter(dateRange[0]) && itemDate.isBefore(dateRange[1]);
-      }
-
-      return (
-        matchesSearch &&
-        matchesProject &&
-        matchesEnvironment &&
-        matchesErrorType &&
-        matchesFixedStatus &&
-        matchesDateRange
-      );
-    });
-  }, [
-    data,
-    searchText,
-    selectedProject,
-    selectedEnvironment,
-    selectedErrorType,
-    showOnlyUnfixed,
-    dateRange,
-  ]);
+  const projects = [...new Set(data?.map((item: any) => item.project))];
+  const environments = [
+    ...new Set(data?.map((item: any) => item.environments)),
+  ];
+  const errorTypes = [...new Set(data?.map((item: any) => item.name))];
 
   // Statistics
   const stats = useMemo(() => {
-    const total = data.length;
-    const fixed = data.filter((item) => item.isFixed).length;
+    const total = data?.length;
+    const fixed = data?.filter((item: any) => item.isFixed).length;
     const unfixed = total - fixed;
-    const criticalErrors = data.filter(
-      (item) => item.name.includes("Error") || item.name.includes("Exception")
+    const criticalErrors = data?.filter(
+      (item: any) =>
+        item.name.includes("Error") || item.name.includes("Exception")
     ).length;
 
     return { total, fixed, unfixed, criticalErrors };
   }, [data]);
 
   const handleToggleFixed = (id: string) => {
-    setData((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, isFixed: !item.isFixed } : item
-      )
-    );
+    console.log(`Toggling fixed status for log ID: ${id}`);
   };
 
-  const handleViewDetails = (record: LogEntry) => {
+  const handleViewDetails = (record: any) => {
     setSelectedLog(record);
     setDrawerVisible(true);
   };
@@ -190,7 +106,7 @@ export default function ErrorLogManager() {
     return "default";
   };
 
-  const columns: ColumnsType<LogEntry> = [
+  const columns: ColumnsType = [
     {
       title: "Status",
       dataIndex: "isFixed",
@@ -212,7 +128,7 @@ export default function ErrorLogManager() {
       title: "Error Type",
       dataIndex: "name",
       key: "name",
-      width: 200,
+      width: 120,
       render: (name: string) => (
         <Tag color={getErrorSeverity(name)} icon={<BugOutlined />}>
           {name}
@@ -224,6 +140,7 @@ export default function ErrorLogManager() {
       dataIndex: "message",
       key: "message",
       ellipsis: true,
+      width: 220,
       render: (message: string) => (
         <Text className="text-gray-700" title={message}>
           {message.length > 100 ? `${message.substring(0, 100)}...` : message}
@@ -284,6 +201,7 @@ export default function ErrorLogManager() {
       title: "Actions",
       key: "actions",
       width: 100,
+      align: "center",
       render: (_, record) => (
         <Button
           className="text-blue-600 hover:text-blue-800"
@@ -379,7 +297,7 @@ export default function ErrorLogManager() {
             value={selectedProject}
             onChange={setSelectedProject}
           >
-            {projects.map((project) => (
+            {projects.map((project: any) => (
               <Option key={project} value={project}>
                 {project}
               </Option>
@@ -393,7 +311,7 @@ export default function ErrorLogManager() {
             value={selectedEnvironment}
             onChange={setSelectedEnvironment}
           >
-            {environments.map((env) => (
+            {environments.map((env: any) => (
               <Option key={env} value={env}>
                 {env}
               </Option>
@@ -407,7 +325,7 @@ export default function ErrorLogManager() {
             value={selectedErrorType}
             onChange={setSelectedErrorType}
           >
-            {errorTypes.map((type) => (
+            {errorTypes.map((type: any) => (
               <Option key={type} value={type}>
                 {type}
               </Option>
@@ -445,18 +363,24 @@ export default function ErrorLogManager() {
       <Card>
         <Table
           columns={columns}
-          dataSource={filteredData}
+          dataSource={data}
+          loading={isLoading || isRefetching}
           pagination={{
-            total: filteredData.length,
-            pageSize: 10,
+            current: where.pageIndex,
+            onChange: (page, pageSize) => {
+              setWhere((prev) => ({
+                ...prev,
+                pageIndex: page,
+                pageSize: pageSize || 5,
+              }));
+            },
+            pageSizeOptions: ["5", "10", "20", "50"],
             showSizeChanger: true,
-            showQuickJumper: true,
+            pageSize: where.pageSize,
+            total: total,
             showTotal: (total, range) =>
               `${range[0]}-${range[1]} of ${total} items`,
           }}
-          rowClassName={(record) =>
-            record.isFixed ? "bg-green-50" : "bg-red-50"
-          }
           rowKey="id"
           scroll={{ x: 1200 }}
         />
@@ -467,7 +391,7 @@ export default function ErrorLogManager() {
         open={drawerVisible}
         placement="right"
         title="Error Details"
-        width={600}
+        width={"60%"}
         onClose={() => setDrawerVisible(false)}
       >
         {selectedLog && (
@@ -523,6 +447,14 @@ export default function ErrorLogManager() {
               <div className="bg-gray-100 p-4 rounded-md">
                 <pre className="text-sm overflow-auto whitespace-pre-wrap">
                   {JSON.stringify(JSON.parse(selectedLog.error), null, 2)}
+                </pre>
+              </div>
+            </div>
+            <div>
+              <Title level={5}>Request Details</Title>
+              <div className="bg-gray-100 p-4 rounded-md">
+                <pre className="text-sm overflow-auto whitespace-pre-wrap">
+                  {JSON.stringify(JSON.parse(selectedLog.request), null, 2)}
                 </pre>
               </div>
             </div>

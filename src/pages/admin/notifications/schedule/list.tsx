@@ -9,6 +9,7 @@ import {
   SearchOutlined,
   StopOutlined,
 } from "@ant-design/icons";
+import { addToast } from "@heroui/react";
 import {
   Button,
   Card,
@@ -18,10 +19,10 @@ import {
   Popconfirm,
   Select,
   Space,
+  Spin,
   Table,
   Tag,
   Tooltip,
-  message,
 } from "antd";
 import dayjs from "dayjs";
 import { useState } from "react";
@@ -35,40 +36,14 @@ import {
 
 import { ScheduledNotificationForm } from "./form";
 
+import useCreateSchedule from "@/services/hooks/admin/notification/schedule/useCreateSchedule";
+import useDeleteSchedule from "@/services/hooks/admin/notification/schedule/useDeleteSchedule";
+import useScheduleNotificationPagination from "@/services/hooks/admin/notification/schedule/useSchedulePagination";
+import useUpdateSchedule from "@/services/hooks/admin/notification/schedule/useUpdateSchedule";
+
 const { Search } = Input;
 const { Option } = Select;
 const { RangePicker } = DatePicker;
-
-// Mock data - replace with actual API calls
-const mockScheduledNotifications: ScheduledNotification[] = [
-  {
-    id: "1",
-    userId: "user-1",
-    user: { id: "user-1", name: "John Doe", email: "john@example.com" },
-    title: "Trip Reminder",
-    message: "Your mountain hiking trip starts tomorrow!",
-    notificationType: NotificationType.REMINDER,
-    channels: [NotificationChannel.EMAIL, NotificationChannel.PUSH],
-    scheduledTime: "2024-12-25T09:00:00Z",
-    status: ScheduledNotificationStatus.PENDING,
-    retryAttempts: 0,
-    createdAt: "2024-12-20T10:00:00Z",
-    updatedAt: "2024-12-20T10:00:00Z",
-  },
-  {
-    id: "2",
-    title: "System Maintenance",
-    message: "Scheduled maintenance will begin in 1 hour",
-    notificationType: NotificationType.ALERT,
-    channels: [NotificationChannel.IN_APP],
-    scheduledTime: "2024-12-24T02:00:00Z",
-    status: ScheduledNotificationStatus.SENT,
-    processedAt: "2024-12-24T02:00:00Z",
-    retryAttempts: 0,
-    createdAt: "2024-12-23T10:00:00Z",
-    updatedAt: "2024-12-24T02:00:00Z",
-  },
-];
 
 const statusColors = {
   [ScheduledNotificationStatus.PENDING]: "blue",
@@ -88,10 +63,6 @@ const typeColors = {
 };
 
 const ScheduledNotificationsList = () => {
-  const [notifications, setNotifications] = useState<ScheduledNotification[]>(
-    mockScheduledNotifications
-  );
-  const [loading, setLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingNotification, setEditingNotification] =
     useState<ScheduledNotification | null>(null);
@@ -103,24 +74,32 @@ const ScheduledNotificationsList = () => {
   const [dateRange, setDateRange] = useState<[dayjs.Dayjs, dayjs.Dayjs] | null>(
     null
   );
-
-  const filteredNotifications = notifications.filter((notification) => {
-    const matchesSearch =
-      !searchText ||
-      notification.title.toLowerCase().includes(searchText.toLowerCase()) ||
-      notification.message.toLowerCase().includes(searchText.toLowerCase()) ||
-      notification.user?.name.toLowerCase().includes(searchText.toLowerCase());
-
-    const matchesStatus = !statusFilter || notification.status === statusFilter;
-    const matchesType =
-      !typeFilter || notification.notificationType === typeFilter;
-
-    const matchesDate =
-      !dateRange ||
-      (dayjs(notification.scheduledTime).isAfter(dateRange[0]) &&
-        dayjs(notification.scheduledTime).isBefore(dateRange[1]));
-
-    return matchesSearch && matchesStatus && matchesType && matchesDate;
+  const { onCreate, isLoading: isLoadingCreate } = useCreateSchedule();
+  const { onUpdate, isLoading: isLoadingUpdate } = useUpdateSchedule();
+  const { onDelete, isLoading: isLoadingDelete } = useDeleteSchedule();
+  const [where, setWhere] = useState({
+    pageIndex: 1,
+    pageSize: 5,
+  });
+  const {
+    data: schedules,
+    total,
+    isLoading,
+    isRefetching,
+  } = useScheduleNotificationPagination({
+    skip: (where.pageIndex - 1) * where.pageSize,
+    take: where.pageSize,
+    where: {
+      title: searchText,
+      status: statusFilter,
+      notificationType: typeFilter,
+      scheduledTime: dateRange
+        ? {
+            gte: dateRange[0].toISOString(),
+            lte: dateRange[1].toISOString(),
+          }
+        : undefined,
+    },
   });
 
   const handleCreate = () => {
@@ -134,72 +113,86 @@ const ScheduledNotificationsList = () => {
   };
 
   const handleDelete = async (id: string) => {
-    try {
-      setLoading(true);
-      // API call to delete
-      setNotifications((prev) => prev.filter((n) => n.id !== id));
-      message.success("Scheduled notification deleted successfully");
-    } catch (error) {
-      message.error("Failed to delete scheduled notification");
-    } finally {
-      setLoading(false);
+    const foundSchedule = schedules.find(
+      (schedule: { id: string }) => schedule.id === id
+    );
+
+    if (!foundSchedule) {
+      addToast({
+        title: "Notification not found",
+        description:
+          "The scheduled notification you are trying to delete does not exist.",
+        color: "warning",
+      });
+
+      return;
     }
+
+    onDelete(id).then(() => {
+      addToast({
+        title: "Scheduled notification deleted successfully",
+        description: `Notification "${foundSchedule.title}" has been deleted.`,
+        color: "success",
+      });
+    });
   };
 
   const handleStatusChange = async (
     id: string,
     status: ScheduledNotificationStatus
   ) => {
-    try {
-      setLoading(true);
-      // API call to update status
-      setNotifications((prev) =>
-        prev.map((n) =>
-          n.id === id
-            ? { ...n, status, updatedAt: new Date().toISOString() }
-            : n
-        )
-      );
-      message.success(`Notification ${status} successfully`);
-    } catch (error) {
-      message.error("Failed to update notification status");
-    } finally {
-      setLoading(false);
+    const foundSchedule = schedules.find(
+      (schedule: { id: string }) => schedule.id === id
+    );
+
+    if (!foundSchedule) {
+      addToast({
+        title: "Notification not found",
+        description:
+          "The scheduled notification you are trying to update does not exist.",
+        color: "warning",
+      });
+
+      return;
     }
+    onUpdate({
+      ...foundSchedule,
+      status,
+    }).then(() => {
+      addToast({
+        title: `Scheduled notification ${status.toLowerCase()} successfully`,
+        description: `Notification "${foundSchedule.title}" has been ${status.toLowerCase()}.`,
+        color: "success",
+      });
+    });
   };
 
   const handleFormSubmit = async (values: any) => {
-    try {
-      setLoading(true);
-      if (editingNotification) {
-        // Update existing
-        setNotifications((prev) =>
-          prev.map((n) =>
-            n.id === editingNotification.id
-              ? { ...n, ...values, updatedAt: new Date().toISOString() }
-              : n
-          )
-        );
-        message.success("Scheduled notification updated successfully");
-      } else {
-        // Create new
-        const newNotification: ScheduledNotification = {
-          id: Date.now().toString(),
-          ...values,
-          status: ScheduledNotificationStatus.PENDING,
-          retryAttempts: 0,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        };
+    const body = {
+      ...values,
+    };
 
-        setNotifications((prev) => [newNotification, ...prev]);
-        message.success("Scheduled notification created successfully");
-      }
-      setIsModalVisible(false);
-    } catch (error) {
-      message.error("Failed to save scheduled notification");
-    } finally {
-      setLoading(false);
+    if (editingNotification) {
+      body.id = editingNotification.id;
+      onUpdate(body).then(() => {
+        addToast({
+          title: "Scheduled notification updated successfully",
+          description: `Notification "${body.title}" has been updated.`,
+          color: "success",
+        });
+        setIsModalVisible(false);
+        setEditingNotification(null);
+      });
+    } else {
+      onCreate(body).then(() => {
+        addToast({
+          title: "Scheduled notification created successfully",
+          description: `Notification "${body.title}" has been created.`,
+          color: "success",
+        });
+        setIsModalVisible(false);
+        setEditingNotification(null);
+      });
     }
   };
 
@@ -215,7 +208,8 @@ const ScheduledNotificationsList = () => {
       title: "User",
       key: "user",
       width: 150,
-      render: (_, record) => record.user?.name || "All Users",
+      render: (_, record) =>
+        record.isAllUser ? "All Users" : record.user?.username || "N/A",
     },
     {
       title: "Type",
@@ -403,11 +397,23 @@ const ScheduledNotificationsList = () => {
 
         <Table
           columns={columns}
-          dataSource={filteredNotifications}
-          loading={loading}
+          dataSource={schedules || []}
+          loading={
+            isLoading || isRefetching || isLoadingDelete || isLoadingUpdate
+          }
           pagination={{
-            total: filteredNotifications.length,
-            pageSize: 10,
+            current: where.pageIndex,
+            onChange: (page, pageSize) => {
+              setWhere({
+                ...where,
+                pageIndex: page,
+                pageSize: pageSize || 10,
+              });
+            },
+            pageSizeOptions: ["5", "10", "20", "50", "100"],
+            defaultPageSize: 5,
+            total: total,
+            pageSize: where.pageSize,
             showSizeChanger: true,
             showQuickJumper: true,
             showTotal: (total, range) =>
@@ -432,11 +438,17 @@ const ScheduledNotificationsList = () => {
       >
         <ScheduledNotificationForm
           initialValues={editingNotification}
-          loading={loading}
+          loading={isLoading || isLoadingCreate || isLoadingUpdate}
           onCancel={() => setIsModalVisible(false)}
           onSubmit={handleFormSubmit}
         />
       </Modal>
+
+      {isLoading && (
+        <div className="flex justify-center items-center w-screen h-screen">
+          <Spin size="large" />
+        </div>
+      )}
     </div>
   );
 };

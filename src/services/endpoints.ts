@@ -9,6 +9,7 @@ export const endpoints = {
       UPDATE: "blog",
       FORCE_DELETE: "blog/force",
       PAGINATION: "blog/pagination",
+      DETAIL: "blog",
     },
     FOOD: {
       PAGINATION: "food/pagination",
@@ -29,11 +30,6 @@ export const endpoints = {
       DELETE: "api/delete-location",
       GET_ALL: "api/get-all-location",
       GET_BY_ID: "location",
-    },
-
-    LOG: {
-      BUILD_LOG_PAG: "log/build-log",
-      ERROR_LOG_PAG: "log/error-log",
     },
 
     //#region  master data
@@ -63,6 +59,19 @@ export const endpoints = {
     },
     //#endregion
 
+    //#region notification
+    NOTIFICATION: {
+      PAGINATION: "admin/notification/pagination",
+      CREATE: "admin/notification",
+      GET_BY_ID: (id: string) => `admin/notification/${id}`,
+      SCHEDULE_PAGINATION: "admin/notification/schedule/pagination",
+      SCHEDULE_CREATE: "admin/notification/schedule",
+      SCHEDULE_BY_ID: (id: string) => `admin/notification/schedule/${id}`,
+      SCHEDULE_UPDATE: `admin/notification/schedule`,
+      SCHEDULE_DELETE: (id: string) => `admin/notification/schedule/${id}`,
+    },
+    //#endregion
+
     //#region transaction
     TRANSACTION: {
       PAGINATION: "transaction/pagination",
@@ -72,7 +81,13 @@ export const endpoints = {
     //#region user
     USER: {
       PAGINATION: "user/pagination",
+      SELECT_BOX: "admin/user/select-box",
     },
     //#endregion
+
+    LOG: {
+      BUILD_LOG_PAG: "admin/log/build-log",
+      ERROR_LOG_PAG: "admin/log/error-log",
+    },
   },
 };

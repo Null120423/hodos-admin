@@ -45,3 +45,7 @@ export const ADMIN_ROUTES = {
 export const AUTH_ROUTES = {
   LOGIN: "/",
 };
+
+export const USER_ROUTES = {
+  BLOG_DETAIL: "/blog-detail/:id",
+};

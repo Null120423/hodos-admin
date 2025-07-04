@@ -1,7 +1,7 @@
 import { lazy, Suspense } from "react";
 import { Navigate, Outlet, useRoutes } from "react-router-dom";
 
-import { ADMIN_ROUTES, AUTH_ROUTES } from "./routes";
+import { ADMIN_ROUTES, AUTH_ROUTES, USER_ROUTES } from "./routes";
 
 import LoadingView from "@/components/loading-view";
 import AuthLayout from "@/layouts/auth-layout";
@@ -31,7 +31,11 @@ export const SettingPage = lazy(() => import("../pages/admin/index"));
 export const BlogManagerPage = lazy(
   () => import("../pages/admin/blog-system/index")
 );
+export const BlogDetailPage = lazy(
+  () => import("../pages/user/blog/detail/index")
+);
 export const BlogManagerCreatePage = lazy(() => import("../pages/admin/index"));
+
 export const BuildLogPage = lazy(() => import("../pages/admin/index"));
 export const ErrorLogPage = lazy(() => import("../pages/admin/index"));
 
@@ -191,6 +195,10 @@ function AppRouter() {
   const routes = useRoutes([
     ...AdminRoute,
     ...AuthRoutes,
+    {
+      path: USER_ROUTES.BLOG_DETAIL,
+      element: <BlogDetailPage />,
+    },
     {
       path: "404",
       element: <Page404 />,

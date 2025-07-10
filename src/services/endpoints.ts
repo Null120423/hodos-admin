@@ -9,7 +9,7 @@ export const endpoints = {
       UPDATE: "blog",
       FORCE_DELETE: "blog/force",
       PAGINATION: "blog/pagination",
-      DETAIL: "blog",
+      DETAIL: "public/blog",
     },
     FOOD: {
       PAGINATION: "food/pagination",

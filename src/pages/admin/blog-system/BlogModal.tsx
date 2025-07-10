@@ -80,7 +80,7 @@ export default function BlogModal({
         <Form.Item label="Thumbnail">
           <Upload
             accept="image/*"
-            action="https://hodos-api.gitlabserver.id.vn/common/upload-image"
+            action="https://hodos-api.gitlabserver.id.vn/upload"
             fileList={fileList}
             listType="picture-card"
             maxCount={1}

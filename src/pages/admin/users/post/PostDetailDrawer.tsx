@@ -1,29 +1,19 @@
 import {
   Avatar,
   Badge,
-  Button,
   Card,
   Col,
   Divider,
   Drawer,
   Image,
   Row,
-  Tag,
   Typography,
 } from "antd";
 import { CheckCircle2, ShieldAlert, User as UserIcon } from "lucide-react";
 
 const { Title, Text } = Typography;
 
-export default function PostDetailDrawer({
-  visible,
-  post,
-  onClose,
-  onEdit,
-  onModerate,
-  tagOptions,
-  moderationStatusOptions,
-}: any) {
+export default function PostDetailDrawer({ visible, post, onClose }: any) {
   return (
     <Drawer
       open={visible}
@@ -64,33 +54,6 @@ export default function PostDetailDrawer({
                   {new Date(post.createdAt).toLocaleTimeString("en-US")}
                 </div>
               </div>
-            </div>
-
-            {/* Tags and Status */}
-            <div className="flex items-center space-x-2 mb-4">
-              {post.tag && (
-                <Tag
-                  color={
-                    tagOptions.find((t: any) => t.value === post.tag)?.color
-                  }
-                >
-                  {post.tag}
-                </Tag>
-              )}
-              <Tag
-                color={
-                  moderationStatusOptions.find(
-                    (s: any) => s.value === post.moderationStatus
-                  )?.color
-                }
-              >
-                {
-                  moderationStatusOptions.find(
-                    (s: any) => s.value === post.moderationStatus
-                  )?.label
-                }
-              </Tag>
-              {post.isPublished && <Tag color="green">Published</Tag>}
             </div>
 
             {/* Engagement Stats */}
@@ -173,18 +136,20 @@ export default function PostDetailDrawer({
           </Card>
 
           {/* Images */}
-          {post.imgs && JSON.parse(post.imgs).length > 0 && (
+          {post.imgs && post?.imgs?.split(",").length > 0 && (
             <div className="mb-6">
               <Title level={5}>Images</Title>
               <div className="grid grid-cols-2 gap-4">
-                {JSON.parse(post.imgs).map((img: string, index: number) => (
-                  <Image
-                    key={index}
-                    alt={`Image ${index + 1}`}
-                    className="rounded"
-                    src={img || "/placeholder.svg"}
-                  />
-                ))}
+                {post?.imgs
+                  ?.split(",")
+                  .map((img: string, index: number) => (
+                    <Image
+                      key={index}
+                      alt={`Image ${index + 1}`}
+                      className="rounded"
+                      src={img || "/placeholder.svg"}
+                    />
+                  ))}
               </div>
             </div>
           )}
@@ -196,14 +161,6 @@ export default function PostDetailDrawer({
               dangerouslySetInnerHTML={{ __html: post.content }}
               className="prose max-w-none"
             />
-          </div>
-
-          {/* Actions */}
-          <div className="flex justify-end space-x-2">
-            <Button onClick={() => onModerate(post)}>Moderate</Button>
-            <Button type="primary" onClick={() => onEdit(post)}>
-              Edit
-            </Button>
           </div>
         </div>
       )}

@@ -85,6 +85,13 @@ export const endpoints = {
     },
     //#endregion
 
+    //#region user post
+    USER_POST: {
+      PAGINATION: "admin/user-post/pagination",
+      REJECT: (id: string) => `admin/user-post/reject/${id}`,
+    },
+    //#endregion
+
     LOG: {
       BUILD_LOG_PAG: "admin/log/build-log",
       ERROR_LOG_PAG: "admin/log/error-log",

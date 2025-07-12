@@ -2,8 +2,13 @@ import {
   Avatar,
   Badge,
   Button,
+  Form,
   Image,
+  Input,
+  message,
+  Popover,
   Progress,
+  Select,
   Space,
   Table,
   Tag,
@@ -12,21 +17,137 @@ import {
 } from "antd";
 import {
   CheckCircle2,
-  Edit,
   Eye,
+  LucideFileWarning,
   ShieldAlert,
-  Trash2,
-  User as UserIcon,
+  UserIcon,
 } from "lucide-react";
+import React, { useState } from "react";
 
 const { Text } = Typography;
+const { TextArea } = Input;
+
+const REJECTION_REASONS = [
+  { value: "inappropriate_content", label: "Inappropriate Content" },
+  { value: "spam", label: "Spam" },
+  { value: "harassment", label: "Harassment" },
+  { value: "violence", label: "Violence" },
+  { value: "hate_speech", label: "Hate Speech" },
+  { value: "misinformation", label: "Misinformation" },
+  { value: "copyright_violation", label: "Copyright Violation" },
+  { value: "adult_content", label: "Adult Content" },
+  { value: "privacy_violation", label: "Privacy Violation" },
+  { value: "other", label: "Other" },
+];
+
+const RejectPostPopover = ({
+  postId,
+  onReject,
+  trigger,
+}: {
+  postId: string;
+  onReject: (postId: string, reason: string, details: string) => void;
+  trigger: React.ReactNode;
+}) => {
+  const [form] = Form.useForm();
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async () => {
+    try {
+      const values = await form.validateFields();
+
+      setLoading(true);
+
+      await onReject(postId, values.reason, values.details);
+
+      message.success("Post rejected successfully");
+      setOpen(false);
+      form.resetFields();
+    } catch {
+      message.error("Failed to reject post");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCancel = () => {
+    setOpen(false);
+    form.resetFields();
+  };
+
+  const content = (
+    <div className="w-96">
+      <Form form={form} layout="vertical">
+        <Form.Item
+          label="Rejection Reason"
+          name="reason"
+          rules={[{ required: true, message: "Please select a reason" }]}
+        >
+          <Select placeholder="Select a reason for rejection">
+            {REJECTION_REASONS.map((reason) => (
+              <Select.Option key={reason.value} value={reason.value}>
+                {reason.label}
+              </Select.Option>
+            ))}
+          </Select>
+        </Form.Item>
+
+        <Form.Item
+          label="Additional Details"
+          name="details"
+          rules={[
+            { required: true, message: "Please provide additional details" },
+            { min: 10, message: "Details must be at least 10 characters" },
+          ]}
+        >
+          <TextArea
+            showCount
+            maxLength={500}
+            placeholder="Please provide specific details about why this post is being rejected..."
+            rows={4}
+          />
+        </Form.Item>
+
+        <Form.Item className="mb-0">
+          <Space className="w-full justify-end">
+            <Button onClick={handleCancel}>Cancel</Button>
+            <Button
+              danger
+              loading={loading}
+              type="primary"
+              onClick={handleSubmit}
+            >
+              Reject Post
+            </Button>
+          </Space>
+        </Form.Item>
+      </Form>
+    </div>
+  );
+
+  return (
+    <Popover
+      content={content}
+      open={open}
+      placement="leftTop"
+      title="Reject Post"
+      trigger="click"
+      onOpenChange={setOpen}
+    >
+      {trigger}
+    </Popover>
+  );
+};
 
 export default function PostTable({
   posts,
   onView,
-  onEdit,
-  onModerate,
   onDelete,
+  total,
+  where,
+  onChangePageSize,
+  isLoading,
 }: any) {
   const tagColors: Record<string, string> = {
     "Ẩm thực": "red",
@@ -103,10 +224,6 @@ export default function PostTable({
             <Text className="text-xs" type="secondary">
               @{record.user.username}
             </Text>
-            <div className="flex items-center space-x-1">
-              <span className="text-yellow-500 text-xs">⭐</span>
-              <span className="text-xs">{record.user.reputationScore}</span>
-            </div>
           </div>
         </div>
       ),
@@ -117,8 +234,8 @@ export default function PostTable({
       render: (record: any) => (
         <div>
           <div className="flex items-center space-x-2 mb-2">
-            <Tag color={moderationStatusLabels[record.moderationStatus]?.color}>
-              {moderationStatusLabels[record.moderationStatus]?.label}
+            <Tag color={record.statusData?.color}>
+              {record.statusData?.label}
             </Tag>
             {record.flagCount > 0 && (
               <Badge count={record.flagCount} size="small">
@@ -186,33 +303,22 @@ export default function PostTable({
                 onClick={() => onView(record)}
               />
             </Tooltip>
-            <Tooltip title="Edit">
-              <Button
-                icon={<Edit size={16} />}
-                size="small"
-                type="link"
-                onClick={() => onEdit(record)}
+            {record?.isReject && (
+              <RejectPostPopover
+                postId={record.id}
+                trigger={
+                  <Tooltip title="Reject Post">
+                    <Button
+                      danger
+                      icon={<LucideFileWarning />}
+                      size="small"
+                      type="link"
+                    />
+                  </Tooltip>
+                }
+                onReject={onDelete}
               />
-            </Tooltip>
-            <Tooltip title="Moderate">
-              <Button
-                icon={<ShieldAlert size={16} />}
-                size="small"
-                type="link"
-                onClick={() => onModerate(record)}
-              />
-            </Tooltip>
-          </Space>
-          <Space size="small">
-            <Tooltip title="Delete">
-              <Button
-                danger
-                icon={<Trash2 size={16} />}
-                size="small"
-                type="link"
-                onClick={() => onDelete(record.id)}
-              />
-            </Tooltip>
+            )}
           </Space>
         </Space>
       ),
@@ -223,8 +329,15 @@ export default function PostTable({
     <Table
       columns={columns}
       dataSource={posts}
+      loading={isLoading}
       pagination={{
-        pageSize: 10,
+        total: total,
+        defaultPageSize: 5,
+        pageSize: where?.pageSize,
+        current: where?.pageIndex,
+        onChange: (page, pageSize) => {
+          onChangePageSize(page, pageSize);
+        },
         showSizeChanger: true,
         showQuickJumper: true,
         showTotal: (total, range) =>

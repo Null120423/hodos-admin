@@ -10,7 +10,7 @@ import ProblemSolution from "./components/ProblemSolution";
 
 function LandingPageScreen() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen ">
       <Header />
       <Hero />
       <ProblemSolution />

@@ -158,16 +158,6 @@ export default function PostTable({
     Khác: "gray",
   };
 
-  const moderationStatusLabels: Record<
-    string,
-    { label: string; color: string }
-  > = {
-    pending: { label: "Pending", color: "orange" },
-    approved: { label: "Approved", color: "green" },
-    rejected: { label: "Rejected", color: "red" },
-    flagged: { label: "Flagged", color: "volcano" },
-  };
-
   const columns = [
     {
       title: "Post",

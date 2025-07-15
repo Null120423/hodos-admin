@@ -1,5 +1,4 @@
-import React from 'react';
-import { Download, UserPlus, MapPin, Apple, Play } from 'lucide-react';
+import { Apple, Download, MapPin, Play, UserPlus } from "lucide-react";
 
 const HowToInstall = () => {
   const steps = [
@@ -8,40 +7,43 @@ const HowToInstall = () => {
       icon: Download,
       title: "Download",
       description: "Get the app from App Store or Google Play Store",
-      color: "bg-sky-500"
+      color: "bg-sky-500",
     },
     {
       step: "2",
       icon: UserPlus,
       title: "Sign up",
       description: "Create your account and set your travel preferences",
-      color: "bg-yellow-500"
+      color: "bg-yellow-500",
     },
     {
       step: "3",
       icon: MapPin,
       title: "Start exploring!",
       description: "Begin your AI-powered journey through Ho Chi Minh City",
-      color: "bg-green-500"
-    }
+      color: "bg-green-500",
+    },
   ];
 
   return (
-    <section id="how-it-works" className="py-20 bg-white">
+    <section className="py-20 bg-white" id="how-it-works">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
             How to Get Started
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Getting started with your AI travel companion is simple and takes just minutes.
+            Getting started with your AI travel companion is simple and takes
+            just minutes.
           </p>
         </div>
 
         <div className="grid md:grid-cols-3 gap-8 mb-16">
           {steps.map((step, index) => (
             <div key={index} className="text-center relative">
-              <div className={`w-16 h-16 ${step.color} rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg`}>
+              <div
+                className={`w-16 h-16 ${step.color} rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg`}
+              >
                 <step.icon className="w-8 h-8 text-white" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-3">
@@ -50,10 +52,10 @@ const HowToInstall = () => {
               <p className="text-gray-600 leading-relaxed">
                 {step.description}
               </p>
-              
+
               {index < steps.length - 1 && (
                 <div className="hidden md:block absolute top-8 left-1/2 w-full h-0.5 bg-gradient-to-r from-gray-300 to-gray-300 transform translate-x-8">
-                  <div className="absolute right-0 w-3 h-3 bg-gray-300 rounded-full transform -translate-y-1"></div>
+                  <div className="absolute right-0 w-3 h-3 bg-gray-300 rounded-full transform -translate-y-1" />
                 </div>
               )}
             </div>

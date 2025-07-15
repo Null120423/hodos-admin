@@ -1,5 +1,4 @@
-import React from 'react';
-import { Download, Rocket, Star } from 'lucide-react';
+import { Download, Rocket, Star } from "lucide-react";
 
 const CTA = () => {
   return (
@@ -13,7 +12,8 @@ const CTA = () => {
             Start Your Journey in Ho Chi Minh City with AI!
           </h2>
           <p className="text-xl text-sky-100 max-w-3xl mx-auto mb-8">
-            Join thousands of travelers who have discovered the magic of Vietnam's most vibrant city with our AI-powered travel companion.
+            Join thousands of travelers who have discovered the magic of
+            Vietnam's most vibrant city with our AI-powered travel companion.
           </p>
         </div>
 
@@ -32,11 +32,11 @@ const CTA = () => {
             <Star className="w-5 h-5 text-yellow-400 mr-1" />
             <span className="font-semibold">4.8/5 Rating</span>
           </div>
-          <div className="w-px h-6 bg-sky-400"></div>
+          <div className="w-px h-6 bg-sky-400" />
           <div>
             <span className="font-semibold">10,000+</span> Downloads
           </div>
-          <div className="w-px h-6 bg-sky-400"></div>
+          <div className="w-px h-6 bg-sky-400" />
           <div>
             <span className="font-semibold">Available</span> on iOS & Android
           </div>

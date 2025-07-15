@@ -1,31 +1,39 @@
-import React from 'react';
-import { Globe, Facebook, Twitter, Instagram, Youtube, Mail, Phone, MapPin } from 'lucide-react';
+import {
+  Facebook,
+  Globe,
+  Instagram,
+  Mail,
+  MapPin,
+  Phone,
+  Twitter,
+  Youtube,
+} from "lucide-react";
 
 const Footer = () => {
   const socialLinks = [
     { icon: Facebook, href: "#", label: "Facebook" },
     { icon: Twitter, href: "#", label: "Twitter" },
     { icon: Instagram, href: "#", label: "Instagram" },
-    { icon: Youtube, href: "#", label: "YouTube" }
+    { icon: Youtube, href: "#", label: "YouTube" },
   ];
 
   const footerLinks = [
     {
       title: "Product",
-      links: ["Features", "How it works", "Pricing", "Download"]
+      links: ["Features", "How it works", "Pricing", "Download"],
     },
     {
       title: "Company",
-      links: ["About us", "Careers", "Press", "News"]
+      links: ["About us", "Careers", "Press", "News"],
     },
     {
       title: "Support",
-      links: ["Help center", "Contact", "Privacy policy", "Terms"]
-    }
+      links: ["Help center", "Contact", "Privacy policy", "Terms"],
+    },
   ];
 
   return (
-    <footer id="contact" className="bg-gray-900 text-white">
+    <footer className="bg-gray-900 text-white" id="contact">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid md:grid-cols-4 gap-8">
           <div className="md:col-span-1">
@@ -34,15 +42,16 @@ const Footer = () => {
               <span className="text-xl font-bold">HCM Travel AI</span>
             </div>
             <p className="text-gray-400 mb-6 leading-relaxed">
-              Your AI-powered travel companion for exploring Ho Chi Minh City. Discover, connect, and experience Vietnam like never before.
+              Your AI-powered travel companion for exploring Ho Chi Minh City.
+              Discover, connect, and experience Vietnam like never before.
             </p>
             <div className="flex space-x-4">
               {socialLinks.map((social, index) => (
-                <a 
+                <a
                   key={index}
-                  href={social.href}
-                  className="bg-gray-800 p-2 rounded-lg hover:bg-sky-500 transition-colors"
                   aria-label={social.label}
+                  className="bg-gray-800 p-2 rounded-lg hover:bg-sky-500 transition-colors"
+                  href={social.href}
                 >
                   <social.icon className="w-5 h-5" />
                 </a>
@@ -56,7 +65,10 @@ const Footer = () => {
               <ul className="space-y-2">
                 {section.links.map((link, linkIndex) => (
                   <li key={linkIndex}>
-                    <a href="#" className="text-gray-400 hover:text-white transition-colors">
+                    <a
+                      className="text-gray-400 hover:text-white transition-colors"
+                      href="#"
+                    >
                       {link}
                     </a>
                   </li>

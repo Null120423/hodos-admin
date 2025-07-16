@@ -32,7 +32,11 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
   const [language, setLanguage] = useState<Language>("vi");
 
   const t = (key: string): string => {
-    return translations[language][key] || key;
+    if (!key) return "";
+
+    const translation = translations[language]?.[key];
+
+    return translation || key;
   };
 
   return (
@@ -42,7 +46,9 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
   );
 };
 
-const translations = {
+type TranslationMap = { [key: string]: string };
+
+const translations: Record<Language, TranslationMap> = {
   vi: {
     // Navigation
     "nav.home": "Trang chủ",

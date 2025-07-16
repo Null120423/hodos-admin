@@ -1416,10 +1416,10 @@
   resolved "https://registry.npmjs.org/@heroui/shared-icons/-/shared-icons-2.1.9.tgz"
   integrity sha512-CuKB8bKtRrZzxhU0dpaM9ecJWbs3ZfgWIQG0neYcbEQse0rS83VsKLokh+nmL8fNl69gq1ykT+HYsURnDGyrMw==
 
-"@heroui/shared-utils@2.1.9":
-  version "2.1.9"
-  resolved "https://registry.npmjs.org/@heroui/shared-utils/-/shared-utils-2.1.9.tgz"
-  integrity sha512-mM/Ep914cYMbw3T/b6+6loYhuNfzDaph76mzw/oIS05gw1Dhp9luCziSiIhqDGgzYck2d74oWTZlahyCsxf47w==
+"@heroui/shared-utils@2.1.9", "@heroui/shared-utils@2.2.4":
+  version "2.1.10"
+  resolved "https://registry.yarnpkg.com/@heroui/shared-utils/-/shared-utils-2.1.10.tgz#15c12c49b92610a2cd545a74343b96bb4371e785"
+  integrity sha512-w6pSRZZBNDG5/aFueSDUWqOIzqUjKojukg7FxTnVeUX+vIlnYV2Wfv+W+C4l+OV7o0t8emeoe5tXZh8QcLEZEQ==
 
 "@heroui/skeleton@2.2.14":
   version "2.2.14"

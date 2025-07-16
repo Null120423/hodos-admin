@@ -49,4 +49,5 @@ export const AUTH_ROUTES = {
 export const USER_ROUTES = {
   BLOG_DETAIL: "/blog-detail/:id",
   LANDING: "/landing",
+  TERMS: "/terms",
 };

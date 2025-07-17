@@ -66,6 +66,7 @@ export const endpoints = {
       GET_BY_ID: (id: string) => `admin/notification/${id}`,
       SCHEDULE_PAGINATION: "admin/notification/schedule/pagination",
       SCHEDULE_CREATE: "admin/notification/schedule",
+      SCHEDULE_SEND: (id: string) => `admin/notification/schedule/send/${id}`,
       SCHEDULE_BY_ID: (id: string) => `admin/notification/schedule/${id}`,
       SCHEDULE_UPDATE: `admin/notification/schedule`,
       SCHEDULE_DELETE: (id: string) => `admin/notification/schedule/${id}`,

@@ -7,6 +7,7 @@ import {
   PlusOutlined,
   ReloadOutlined,
   SearchOutlined,
+  SendOutlined,
   StopOutlined,
 } from "@ant-design/icons";
 import { addToast } from "@heroui/react";
@@ -39,6 +40,7 @@ import { ScheduledNotificationForm } from "./form";
 import useCreateSchedule from "@/services/hooks/admin/notification/schedule/useCreateSchedule";
 import useDeleteSchedule from "@/services/hooks/admin/notification/schedule/useDeleteSchedule";
 import useScheduleNotificationPagination from "@/services/hooks/admin/notification/schedule/useSchedulePagination";
+import useSendScheduleNotification from "@/services/hooks/admin/notification/schedule/useSendScheduleNotification";
 import useUpdateSchedule from "@/services/hooks/admin/notification/schedule/useUpdateSchedule";
 
 const { Search } = Input;
@@ -77,6 +79,7 @@ const ScheduledNotificationsList = () => {
   const { onCreate, isLoading: isLoadingCreate } = useCreateSchedule();
   const { onUpdate, isLoading: isLoadingUpdate } = useUpdateSchedule();
   const { onDelete, isLoading: isLoadingDelete } = useDeleteSchedule();
+  const { onSend, isLoading: isLoadingSend } = useSendScheduleNotification();
   const [where, setWhere] = useState({
     pageIndex: 1,
     pageSize: 5,
@@ -165,6 +168,26 @@ const ScheduledNotificationsList = () => {
         color: "success",
       });
     });
+  };
+
+  const handleSendScheduleNotification = async (id: string) => {
+    onSend(id)
+      .then(() => {
+        addToast({
+          title: "Scheduled notification sent successfully",
+          description: "The notification has been sent to the users.",
+          color: "success",
+        });
+      })
+      .catch((error) => {
+        addToast({
+          title: "Failed to send notification",
+          description:
+            error.message ||
+            "An error occurred while sending the notification.",
+          color: "danger",
+        });
+      });
   };
 
   const handleFormSubmit = async (values: any) => {
@@ -318,7 +341,15 @@ const ScheduledNotificationsList = () => {
               />
             </Tooltip>
           )}
-
+          <Tooltip title="Send Now">
+            <Button
+              icon={<SendOutlined />}
+              type="text"
+              onClick={() => {
+                handleSendScheduleNotification(record.id);
+              }}
+            />
+          </Tooltip>
           <Popconfirm
             cancelText="No"
             okText="Yes"
@@ -399,7 +430,11 @@ const ScheduledNotificationsList = () => {
           columns={columns}
           dataSource={schedules || []}
           loading={
-            isLoading || isRefetching || isLoadingDelete || isLoadingUpdate
+            isLoading ||
+            isRefetching ||
+            isLoadingDelete ||
+            isLoadingUpdate ||
+            isLoadingSend
           }
           pagination={{
             current: where.pageIndex,
